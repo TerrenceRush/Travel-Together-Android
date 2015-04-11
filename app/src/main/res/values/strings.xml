@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Helloworld</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="facebook_app_id">901192963275009</string>
+    <string name="title_activity_list">ListActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="destination">Destination...</string>
+    <string name="departure">Departure Date...</string>
+    <string name="return_date">Return Date...</string>
+    <string name="group_size">Group Size...</string>
+    <string name="privacy">Can be seen by</string>
+    <string name="additional_information">Additional information</string>
+    <string name="option1">All</string>
+    <string name="option2">Friends</string>
+    <string name="option3">2nd Degree</string>
+    <string name="spin">Spin</string>
+    <string name="button_post">Post</string>
+    <string name="button_cancel">Cancel</string>
+
+    <string name="shareToFacebook">Share To Facebook</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_new_post">NewPostActivity</string>
+</resources>

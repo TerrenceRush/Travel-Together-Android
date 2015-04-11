@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"  android:background="@drawable/home" tools:context=".Welcome">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:id="@+id/fullscreen_content">
+
+        <LinearLayout android:id="@+id/fullscreen_content_controls" style="?metaButtonBarStyle"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay" android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+        </LinearLayout>
+
+        <com.facebook.login.widget.LoginButton
+            android:layout_width="360dp"
+            android:layout_height="74dp"
+            android:id="@+id/login_button"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="50dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="64dp"
+            android:text="Start Traveling with Congenial Friends"
+            android:id="@+id/welcomeText"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/dim_foreground_material_light"
+            android:textSize="35dp"
+            android:layout_marginTop="200dp" />
+
+    </FrameLayout>
+
+</FrameLayout>
