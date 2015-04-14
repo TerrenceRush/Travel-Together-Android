@@ -1,10 +1,12 @@
 package com.example.xinyue.helloworld;
 
-import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -40,18 +44,90 @@ import java.util.Map;
 
 
 public class ListActivity extends ActionBarActivity {
-    private AccessToken accessToken;
-    private Spinner friendListSpinner;
+    private static AccessToken accessToken;
     private Spinner naviSpinner;
-    private List<String> friendList = new ArrayList<String>();
     public static final String MY_PREFS_NAME = "tokenInfo";
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private String[] mNavigationDrawerItemTitles;
+
+    public static class contentFragment extends Fragment {
+
+        public contentFragment(){
+
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+            View rootView = inflater.inflate(R.layout.list_content, container, false);
+            final TextView mainTextView = (TextView) rootView.findViewById(R.id.text);
+            final Spinner friendListSpinner = (Spinner) rootView.findViewById(R.id.friend_list);
+            final List<String> friendList = new ArrayList<String>();
+            final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, friendList);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            //request for facebook friend list
+            GraphRequest request = GraphRequest.newMyFriendsRequest(ListActivity.accessToken, new GraphRequest.GraphJSONArrayCallback() {
+                @Override
+                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+//                Log.i("Tag", jsonArray.toString());
+
+//                mainTextView.setText(jsonArray.optString("gender"));
+//                Log.i("Facebook", friends.toString());
+                    for(int i=0;i<jsonArray.length();i++){
+                        try {
+                            friendList.add(((JSONObject) jsonArray.get(i)).optString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    friendListSpinner.setAdapter(dataAdapter);
+
+
+                }
+            });
+
+            request.executeAsync();
+
+            return rootView;
+
+//
+
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        final TextView mainTextView = (TextView) findViewById(R.id.text);
-        friendListSpinner = (Spinner) findViewById(R.id.friend_list);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.filter_drawer);
+        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
+        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[5];
+
+        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_copy, mNavigationDrawerItemTitles[0]);
+        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_action_refresh, mNavigationDrawerItemTitles[1]);
+        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[2]);
+        drawerItem[3] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[3]);
+        drawerItem[4] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[4]);
+
+        DrawerItemCustomAdapter drawerItemCustomAdapter = new DrawerItemCustomAdapter(this, R.layout.drawer_item, drawerItem);
+        mDrawerList.setAdapter(drawerItemCustomAdapter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //set up the view of action bar
         LayoutInflater inflator = (LayoutInflater) this
@@ -79,8 +155,7 @@ public class ListActivity extends ActionBarActivity {
         Log.i("Tag","HERE");
 
         accessToken = bundle.getParcelable("accessToken");
-        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, friendList);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 
         //store the access token of facebook account to sharedPreferences
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
@@ -130,31 +205,14 @@ public class ListActivity extends ActionBarActivity {
         queue.add(getTokenRequest);//add the request to queue, when the network thread pool has available thread, it will be executed
 
 
-        //request for facebook friend list
-        GraphRequest request = GraphRequest.newMyFriendsRequest(accessToken, new GraphRequest.GraphJSONArrayCallback() {
-            @Override
-            public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-//                Log.i("Tag", jsonArray.toString());
-
-//                mainTextView.setText(jsonArray.optString("gender"));
-//                Log.i("Facebook", friends.toString());
-                for(int i=0;i<jsonArray.length();i++){
-                    try {
-                        friendList.add(((JSONObject) jsonArray.get(i)).optString("name"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                friendListSpinner.setAdapter(dataAdapter);
+        //set the content view of frame layout
+        Fragment fragment = new contentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
 
 
-            }
-        });
-
-//        Bundle parameters = new Bundle();
-//        parameters.putString("fields", "friends");
-//        request.setParameters(parameters);
-        request.executeAsync();
     }
 
 

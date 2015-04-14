@@ -25,4 +25,14 @@
     <string name="shareToFacebook">Share To Facebook</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_new_post">NewPostActivity</string>
+
+
+
+    <string-array name="navigation_drawer_items_array">
+        <item>Destination</item>
+        <item>Max Group Size</item>
+        <item>Min Group Size</item>
+        <item>Departure time</item>
+        <item>Return time</item>
+    </string-array>
 </resources>
