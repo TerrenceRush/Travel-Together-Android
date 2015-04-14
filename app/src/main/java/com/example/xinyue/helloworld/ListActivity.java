@@ -1,12 +1,18 @@
 package com.example.xinyue.helloworld;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +42,7 @@ import java.util.Map;
 public class ListActivity extends ActionBarActivity {
     private AccessToken accessToken;
     private Spinner friendListSpinner;
+    private Spinner naviSpinner;
     private List<String> friendList = new ArrayList<String>();
     public static final String MY_PREFS_NAME = "tokenInfo";
 
@@ -45,6 +52,27 @@ public class ListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_list);
         final TextView mainTextView = (TextView) findViewById(R.id.text);
         friendListSpinner = (Spinner) findViewById(R.id.friend_list);
+
+        //set up the view of action bar
+        LayoutInflater inflator = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View actionBarView = inflator.inflate(R.layout.list_actionbar, null);
+        naviSpinner = (Spinner) actionBarView.findViewById(R.id.navigationSpinner);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setCustomView(actionBarView);
+        ArrayList<String> optionsList = new ArrayList<String>();
+        optionsList.add("Friends' Plans");
+        optionsList.add("My Plan");
+        optionsList.add("2nd Degree Plans");
+        ArrayAdapter<String> dataAdapterForNavi = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optionsList);
+        dataAdapterForNavi.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        naviSpinner.setAdapter(dataAdapterForNavi);
+
+
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("accessTokenBundle");
@@ -66,6 +94,7 @@ public class ListActivity extends ActionBarActivity {
         String json = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).getString(MY_PREFS_NAME, "");
         AccessToken accessToken1 = gsonAccessToken.fromJson(json, AccessToken.class);
         */
+
 
         //request to backend to get the specific userId
         RequestQueue queue = Volley.newRequestQueue(this);

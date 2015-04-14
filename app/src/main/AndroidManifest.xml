@@ -30,7 +30,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".ListActivity"
-            android:label="@string/title_activity_list" >
+            android:theme="@style/ActionBarTheme" >
         </activity>
 
         <activity

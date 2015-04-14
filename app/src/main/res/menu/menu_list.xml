@@ -1,7 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:myapp="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.xinyue.helloworld.ListActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <!--
+    <item android:id="@+id/newPost"
+        android:title="newPost"
+        android:icon="@drawable/ic_action_edit"
+        myapp:showAsAction="ifRoom"
+        android:orderInCategory="1"/>
+    <item android:id="@+id/navigationSpinner"
+        android:title="navigation"
+        myapp:showAsAction="ifRoom"
+        myapp:actionViewClass="android.widget.Spinner"
+        android:orderInCategory="2"/>
+    <item android:id="@+id/filter"
+        android:title="filter"
+        android:icon="@drawable/ic_action_settings"
+        myapp:showAsAction="ifRoom"
+        android:orderInCategory="3"/>
+        -->
+
 </menu>
