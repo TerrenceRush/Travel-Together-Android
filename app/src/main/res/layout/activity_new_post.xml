@@ -30,7 +30,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button">
+        android:layout_below="@+id/post">
 
         <EditText
             android:id="@+id/destination"
@@ -45,16 +45,24 @@
             android:layout_width="fill_parent"></EditText>
 
         <EditText
-            android:id="@+id/privacy"
+            android:id="@+id/return_date"
             android:layout_height="wrap_content"
-            android:hint="@string/privacy"
+            android:hint="@string/return_date"
+            android:layout_width="fill_parent"></EditText>
+
+
+        <EditText
+            android:id="@+id/group_size"
+            android:layout_height="wrap_content"
+            android:hint="@string/group_size"
             android:layout_width="fill_parent"></EditText>
 
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup">
 
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,11 +86,7 @@
 
         </RadioGroup>
 
-        <EditText
-            android:id="@+id/return_date"
-            android:layout_height="wrap_content"
-            android:hint="@string/return_date"
-            android:layout_width="fill_parent"></EditText>
+
 
 
 
@@ -103,11 +107,12 @@
                 android:text="Share to Facebook" />
 
             <CheckBox
+                android:id="@+id/shareFacebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:text=""
-                android:clickable="false"
+                android:clickable="true"
                 />
 
         </LinearLayout>
