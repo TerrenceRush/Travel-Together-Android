@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -17,7 +18,7 @@ import android.widget.Spinner;
 
 import com.example.xinyue.helloworld.R;
 
-public class NewPostActivity extends ActionBarActivity {
+public class NewPostActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class NewPostActivity extends ActionBarActivity {
             @Override
             public void onClick(View arg0) {
 
-                Intent intent = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, MapsActivity.class);
                 startActivity(intent);
 
             }
