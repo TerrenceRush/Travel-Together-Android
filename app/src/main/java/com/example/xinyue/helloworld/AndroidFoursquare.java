@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import org.apache.http.client.HttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -46,7 +48,7 @@ public class AndroidFoursquare extends ListActivity {
 
     private class foursquare {
         String result;
-        protected String getExplore(String url1) throws IOException {
+        protected String getExplore(String url1) throws IOException, JSONException {
             URL url = new URL(url1);
             URLConnection urlConnection = url.openConnection();
             InputStream inputStream = (InputStream) urlConnection.getContent();
@@ -58,8 +60,28 @@ public class AndroidFoursquare extends ListActivity {
                 Log.e("MYAPP", "unexpected JSON exception", e);
             }
 
-            String result = obj.toString();
-            return result;
+//            String result = obj.toString();
+//            return result;
+
+            JSONObject response = obj.getJSONObject("response");
+            JSONArray groups = response.getJSONArray("groups");
+            JSONObject recommendation = groups.getJSONObject(0);
+            JSONArray items = recommendation.getJSONArray("items");
+            JSONObject item = items.getJSONObject(0);
+
+            JSONObject venue = item.getJSONObject("venue");
+            String name = venue.getString("name");
+            JSONArray categories = venue.getJSONArray("categories");
+            JSONObject category = categories.getJSONObject(0);
+            String type = category.getString("name");
+
+            String contact = venue.getJSONObject("contact").getString("formattedPhone");
+
+            String tips = item.getJSONArray("tips").getJSONObject(0).getString("text");
+
+            System.out.println(tips);
+//		String result = obj.toString();
+//		System.out.println(result);
 
         }
 
