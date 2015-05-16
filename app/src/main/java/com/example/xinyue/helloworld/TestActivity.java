@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +76,11 @@ public class TestActivity extends ActionBarActivity {
 
             placeRecom = new ArrayAdapter<String>(getActivity(),
                     R.layout.list_item, R.id.item_textview, recommendation);
+
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            ListView listview = (ListView) rootView.findViewById(R.id.listview_recom);
+            listview.setAdapter(placeRecom);
             return rootView;
         }
     }

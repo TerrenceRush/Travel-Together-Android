@@ -12,7 +12,7 @@
 
 
     <ListView
-        android:id="@+id/listview_forecast"
+        android:id="@+id/listview_recom"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
