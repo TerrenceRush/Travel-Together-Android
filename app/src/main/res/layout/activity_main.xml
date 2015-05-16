@@ -11,4 +11,12 @@
         <!--android:layout_height="wrap_content" >-->
     <!--</ListView>-->
 
+    <Button android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_post"
+        android:onClick="sendMessage"
+        android:id="@+id/Test"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
+
 </LinearLayout>

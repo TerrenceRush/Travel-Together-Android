@@ -1,59 +1,46 @@
 package com.example.xinyue.helloworld;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 
-import org.apache.http.client.HttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class AndroidFoursquare extends ListActivity {
-    ArrayList venuresList;
+public class Recommendation extends Activity {
 
-    //the foursquare ID and Foursquare secret
-    final String clientID = "M5L2PT2YIELOHSMCLOTOCGHGONUNKYHL3HUPZ5REZ44DLCEB";
-    final String clientSecret = "BEJFOTI3FKXLEDSTHEDCVWPSBAUXVM4MD5QAJXQFQWOOU1SF";
 
-    // test lat and lon
-    final String lat = "40.7463956";
-    final String lon = "-73.9852992";
 
-    ArrayAdapter myAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String url = "https://api.foursquare.com/v2/venues/search?client_id=" +
-                clientID + "&client_secret=" + clientSecret + "&v=20130815&ll=40.7463956,-73.9852992";
-        // start the AsyncTask that makes the call for the venus search.
-
-        foursquare fs = new foursquare();
-        try {
-            fs.getExplore(url);
-        } catch (Exception e) {
-            Log.e("result", "problem in get result");
-        }
+        addListenerOnButton2();
     }
 
 
     private class foursquare {
-        String result;
-        protected String getExplore(String url1) throws IOException, JSONException {
+        public String getExplore(String url1) throws IOException, JSONException {
             URL url = new URL(url1);
             URLConnection urlConnection = url.openConnection();
             InputStream inputStream = (InputStream) urlConnection.getContent();
             String content = convertStreamToString(inputStream);
             JSONObject obj = new JSONObject();
+            Log.d("test", "test if in get Explore");
             try {
                 obj = new JSONObject(content);
             } catch (Exception e) {
@@ -79,9 +66,14 @@ public class AndroidFoursquare extends ListActivity {
 
             String tips = item.getJSONArray("tips").getJSONObject(0).getString("text");
 
-            System.out.println(tips);
-//		String result = obj.toString();
-//		System.out.println(result);
+            JSONObject venueRec = new JSONObject();
+            venueRec.put("name", name);
+            venueRec.put("type", type);
+            venueRec.put("contact", contact);
+            venueRec.put("tips", tips);
+            String res = venueRec.toString();
+            Log.d("test", res);
+            return res;
 
         }
 
@@ -94,5 +86,40 @@ public class AndroidFoursquare extends ListActivity {
         }
     }
 
+    public void addListenerOnButton2() {
 
+        //final Context context = this;
+
+        Button button = (Button) findViewById(R.id.Test);
+
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                //the foursquare ID and Foursquare secret
+                final String clientID = "M5L2PT2YIELOHSMCLOTOCGHGONUNKYHL3HUPZ5REZ44DLCEB";
+                final String clientSecret = "BEJFOTI3FKXLEDSTHEDCVWPSBAUXVM4MD5QAJXQFQWOOU1SF";
+
+                // test lat and lon
+                final String lat = "40.7463956";
+                final String lon = "-73.9852992";
+                String url = "https://api.foursquare.com/v2/venues/search?client_id=" +
+                        clientID + "&client_secret=" + clientSecret + "&v=20130815&ll=40.7463956,-73.9852992";
+//        // start the AsyncTask that makes the call for the venus search.
+
+
+
+                foursquare fs = new foursquare();
+
+                try {
+                    Log.d("test", "just for test");
+                    fs.getExplore(url);
+                } catch (Exception e) {
+                    Log.e("result", "problem in get result");
+                }
+            }
+
+        });
+
+    }
 }

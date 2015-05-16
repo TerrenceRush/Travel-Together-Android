@@ -36,4 +36,7 @@
         <item>Return time</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
+
+    // for refresh button
+    <string name="action_refresh" translatable = "false">Refresh</string>
 </resources>

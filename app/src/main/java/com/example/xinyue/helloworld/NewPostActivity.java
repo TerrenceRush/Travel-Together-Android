@@ -84,7 +84,7 @@ public class NewPostActivity extends Activity {
 
                 final String TAG = "MyActivity";
 
-                Log.v(TAG, "index=" + destination);
+                Log.d(TAG, "index=" + destination);
 
                 String test = "test";
 
