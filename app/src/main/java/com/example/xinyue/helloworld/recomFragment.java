@@ -2,6 +2,7 @@ package com.example.xinyue.helloworld;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,15 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -93,40 +99,62 @@ public class recomFragment extends Fragment {
 //            return result;
         Log.d("String size", "size"+result.length());
         JSONObject response = obj.getJSONObject("response");
-//        Log.d("response", response.toString());
-//        JSONArray groups = response.getJSONArray("groups");
-//        Log.d("groups", groups.toString());
-//        JSONObject recommendation = groups.getJSONObject(0);
-//        Log.d("recommendation", recommendation.toString());
-//        JSONArray items = recommendation.getJSONArray("items");
-//        JSONObject item = items.getJSONObject(0);
-//        Log.d("item", item.toString());
-//        JSONObject venue = item.getJSONObject("venue");
-//        String name = venue.getString("name");
-//        JSONArray categories = venue.getJSONArray("categories");
-//        JSONObject category = categories.getJSONObject(0);
-//        String type = category.getString("name");
-//
-//        String contact = venue.getJSONObject("contact").getString("formattedPhone");
-//
-//        String tips = item.getJSONArray("tips").getJSONObject(0).getString("text");
-//        Log.d("test2", "venue :" + name + type + contact + tips);
-//        JSONObject venueRec = new JSONObject();
-//        venueRec.put("name", name);
-//        venueRec.put("type", type);
-//        venueRec.put("contact", contact);
-//        venueRec.put("tips", tips);
-//        String res = venueRec.toString();
-//        Log.v("test", res);
-        JSONObject venue = response.getJSONObject("venue");
-        Log.d("test", venue.toString());
-        return venue.toString();
+        Log.d("response", response.toString());
+        JSONObject bounds = response.getJSONObject("suggestedBounds");
+        Log.d("bounds", bounds.toString());
+        JSONArray groups = response.getJSONArray("groups");
+        Log.d("groups", groups.toString());
+        JSONObject recommendation = groups.getJSONObject(0);
+        Log.d("recommendation", recommendation.toString());
+        JSONArray items = recommendation.getJSONArray("items");
+        JSONObject item = items.getJSONObject(0);
+        Log.d("item", item.toString());
+        JSONObject venue = item.getJSONObject("venue");
+        String name = venue.getString("name");
+        JSONArray categories = venue.getJSONArray("categories");
+        JSONObject category = categories.getJSONObject(0);
+        String type = category.getString("name");
+
+        String contact = venue.getJSONObject("contact").getString("formattedPhone");
+
+        String tips = item.getJSONArray("tips").getJSONObject(0).getString("text");
+        Log.d("test2", "venue :" + name + type + contact + tips);
+        JSONObject venueRec = new JSONObject();
+        venueRec.put("name", name);
+        venueRec.put("type", type);
+        venueRec.put("contact", contact);
+        venueRec.put("tips", tips);
+        String res = venueRec.toString();
+        Log.v("test", res);
+
+        return venueRec.toString();
     }
 
     protected String convertStreamToString(java.io.InputStream is) {
         //@SuppressWarnings("resource")
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+
+    public void generateNoteOnSD(String sFileName, String sBody){
+        try
+        {
+            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+            File gpxfile = new File(root, sFileName);
+            FileWriter writer = new FileWriter(gpxfile);
+            writer.append(sBody);
+            writer.flush();
+            writer.close();
+            //Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public class GetRecommendation extends AsyncTask<Void, Void, Void>  {
@@ -154,7 +182,7 @@ public class recomFragment extends Fragment {
                 final String lat = "40.7463956";
                 final String lon = "-73.9852992";
                 String url1 = "https://api.foursquare.com/v2/venues/search?client_id=" +
-                        clientID + "&client_secret=" + clientSecret + "&v=20130815&ll=40.7463956,-73.9852992&radius=5";
+                        clientID + "&client_secret=" + clientSecret + "&v=20130815&ll=40.7463956,-73.9852992&radius=2";
 
                 // Create the request to Foursqure, and open the connection
                 URL url = new URL(url1);
@@ -186,14 +214,18 @@ public class recomFragment extends Fragment {
                     return null;
                 }
                 recomStr = buffer.toString();
-                Log.d("size", "size" + recomStr.length());
-                Log.d("their method", recomStr);
+                Log.d("permission", Environment.getExternalStorageState());
+//                Log.d("their method", recomStr);
+
+                  generateNoteOnSD("response", recomStr);
 //                String result = null;
 //                try {
-//                    result = parseRecommendation(content);
+//                    result = parseRecommendation(recomStr);
 //                } catch (Exception e) {
 //                    Log.e(LOG_TAG, "ERROR PARSING JSON OBJECT");
 //                }
+//
+//                Log.v("result", result);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
