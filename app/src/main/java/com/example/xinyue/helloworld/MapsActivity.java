@@ -3,6 +3,8 @@ package com.example.xinyue.helloworld;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -22,7 +26,30 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        String title = "find friends to SF";
+        String depart_time = "July-01-2015";
+        String length = "2";
+        String size = "3";
+        String participants = "Jessica";
+        String holder = "David";
+        String describtion = "Let's blow the roof off";
+
+        TextView titleView = (TextView) findViewById(R.id.title);
+        titleView.setText(title);
+
+        TextView time = (TextView) findViewById(R.id.time);
+        time.setText("on " + depart_time + " for " + length +" days");
+
+        TextView sizeHolderView = (TextView) findViewById(R.id.size_holder);
+        sizeHolderView.setText("Group Size : " + size + "              Created by " + holder);
+
+        TextView participantView = (TextView) findViewById(R.id.participants);
+        participantView.setText(participants + " has joined");
+
         setUpMapIfNeeded();
+
+        TextView descriptionView = (TextView) findViewById(R.id.description);
+        descriptionView.setText("Why this place is fun : " + describtion);
     }
 
     @Override
