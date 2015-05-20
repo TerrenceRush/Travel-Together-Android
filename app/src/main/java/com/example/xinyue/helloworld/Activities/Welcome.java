@@ -176,7 +176,7 @@ public class Welcome extends Activity {
                     @Override
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                         Profile.setCurrentProfile(currentProfile);
-                        final Uri user_avatar = currentProfile.getProfilePictureUri(80, 80);
+                        final Uri user_avatar = currentProfile.getProfilePictureUri(50, 50);
                         settings.putString("userAvatar", user_avatar.toString());
                         settings.commit();
 
