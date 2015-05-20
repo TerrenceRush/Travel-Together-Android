@@ -89,6 +89,8 @@ public class recomFragment extends Fragment {
         ListView listview = (ListView) rootView.findViewById(R.id.listview_recom);
         listview.setAdapter(placeRecom);
 
+        GetRecommendation fetchPlace = new GetRecommendation();
+        fetchPlace.execute();
 
         return rootView;
     }

@@ -4,6 +4,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends ActionBarActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -56,12 +60,40 @@ public class MapsActivity extends FragmentActivity {
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
         descriptionView.setText("Why this place is fun : " + describtion);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new recomFragment())
+                .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        menu.add(1,1,1,"test");
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if (id == R.id.help) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
