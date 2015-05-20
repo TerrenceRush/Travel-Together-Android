@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.xinyue.helloworld.Activities.DetailActivity">
 
+    <item android:id="@+id/new_game"
+        android:title="new_game"
+        />
+
+    <item android:id="@+id/help"
+        android:title="help" />
+
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

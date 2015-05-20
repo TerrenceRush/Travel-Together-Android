@@ -291,7 +291,7 @@ public class ListActivity extends ActionBarActivity {
         ){
             @Override
         protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<String,String>();
                 params.put("fbAccessToken", accessToken.getToken());
                 return params;
 

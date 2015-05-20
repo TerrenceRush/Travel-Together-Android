@@ -1,0 +1,49 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:id="@+id/detail">
+
+    <TextView android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:id="@+id/title"
+              android:textStyle ="bold"
+              />
+
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/time"
+        />
+
+
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/size_holder"
+        />
+
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/participants"
+        />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:id="@+id/map"
+    tools:context="com.example.xinyue.helloworld.Activities.MapsActivity"
+    android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <TextView android:layout_height="wrap_content"
+              android:layout_width="wrap_content"
+              android:id="@+id/description"/>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        tools:context=".TestActivity" tools:ignore="MergeRootFrame" />
+
+</LinearLayout>
+
+

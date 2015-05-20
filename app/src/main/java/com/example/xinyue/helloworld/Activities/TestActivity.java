@@ -1,31 +1,35 @@
 package com.example.xinyue.helloworld.Activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.widget.Button;
 
+import com.example.xinyue.helloworld.Fragments.recomFragment;
 import com.example.xinyue.helloworld.R;
 
 
-public class DetailActivity extends ActionBarActivity {
-
-    private Button button;
+/**
+ * Created by Edward on 5/15/15.
+ */
+public class TestActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.recom_list);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new recomFragment())
+                    .commit();
+        }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -41,4 +45,7 @@ public class DetailActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }
