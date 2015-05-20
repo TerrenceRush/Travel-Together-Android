@@ -1,5 +1,7 @@
 package com.example.xinyue.helloworld;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -17,6 +19,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -98,11 +104,29 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(-37.813, 144.962)).title("Marker")
+        String city_name = "new york";
+        LatLng ll = null;
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(this);
+                List<Address> addresses = gc.getFromLocationName(city_name, 5);
+                for (Address add : addresses) {
+                    if (add.hasLatitude() && add.hasLongitude()) {
+                        ll = new LatLng(add.getLatitude(), add.getLongitude());
+                        break;
+                    }
+                }
+            }
+            catch (IOException e) {
+
+            }
+        }
+        Marker marker = mMap.addMarker(new MarkerOptions().position(ll).title("Marker")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         LatLng position = marker.getPosition();
         CameraUpdate cameraPosition = CameraUpdateFactory.newLatLngZoom(position, 11.0f);
         mMap.animateCamera(cameraPosition);
+
 
     }
 
