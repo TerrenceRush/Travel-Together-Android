@@ -35,13 +35,12 @@
         <item>Departure time</item>
         <item>Return time</item>
     </string-array>
-<<<<<<< HEAD
-=======
+
     <string name="title_activity_maps">Map</string>
 
     // for refresh button
     <string name="action_refresh" translatable = "false">Refresh</string>
->>>>>>> faa07f81e24c5d83dff037ab74c6a733444baef1
+
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

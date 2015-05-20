@@ -35,7 +35,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name" >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -61,17 +68,8 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
-        <activity
-            android:name=".Recommendation"
-            android:label="Foursquare">
-        </activity>
         <activity
             android:name=".Activities.TestActivity"
             android:label="@string/app_name" >
