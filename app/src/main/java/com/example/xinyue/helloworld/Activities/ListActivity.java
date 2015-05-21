@@ -308,11 +308,19 @@ public class ListActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.filter) {
+            int a = 5;
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void NewPostLaunch(View v){
+        Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+    }
+
+    public void selectOption(View v)
     }
 
 }
