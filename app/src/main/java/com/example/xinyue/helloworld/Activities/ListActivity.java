@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -73,6 +76,7 @@ public class ListActivity extends ActionBarActivity {
         private ProgressDialog mProgressDialog = null;
         private PlanAdapter adapter;
         private String type = "all";
+        private Context context;
 
         public contentFragment(){
 
@@ -81,6 +85,7 @@ public class ListActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.list_content, container, false);
+            context = this.getActivity();
             mPullDownView = (PullDownView) rootView.findViewById(R.id.pulldown_listview);
             mProgressDialog = new ProgressDialog(this.getActivity());
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -89,6 +94,7 @@ public class ListActivity extends ActionBarActivity {
             mPullDownView.setOnPullDownListener(this);
             mListView = mPullDownView.getListView();
             mListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+            mListView.setVerticalScrollBarEnabled(false);
             adapter = new PlanAdapter(this.getActivity(), R.layout.plan_item,
                     listItems);
             mListView.setAdapter(adapter);
@@ -127,8 +133,7 @@ public class ListActivity extends ActionBarActivity {
         }
 
         public void loadPlans(){
-            final Context context = this.getActivity();
-            if (this.getActivity() != null && !((Activity) this.getActivity()).isFinishing())
+            if (this.getActivity() != null && !(this.getActivity()).isFinishing())
                 mProgressDialog.show();
 
             new Thread(new Runnable(){
@@ -155,23 +160,17 @@ public class ListActivity extends ActionBarActivity {
                                 tmpItem.setDestination(tmp.getString("destination"));
                                 tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
                                 listItems.add(tmpItem);
-                                adapter.notifyDataSetChanged();
                             }
+                            mUIHandler.sendEmptyMessage(0);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-//                    PlanItem faker1 = new PlanItem();
-//                    faker1.setDestination("Seattle, WA");
-//                    faker1.setDescription("Good trip");
-//                    faker1.setName("Xinyue Li");
-//                    faker1.setGroupSize(5);
-//                    faker1.setTitle("HIIII");
-//                    faker1.setDateFrom("2015-08-19");
-//                    faker1.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
-//                    listItems.add(faker1);
-                    adapter.notifyDataSetChanged();
+
+
+
+
 
                 }
 
@@ -191,6 +190,23 @@ public class ListActivity extends ActionBarActivity {
 
             loadPlans();
         }
+
+        @SuppressLint("HandlerLeak")
+        private Handler mUIHandler = new Handler() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void handleMessage(Message msg) {
+                //do remember to dismiss dialog when exiting an activity.
+                if (context != null && !((Activity) context).isFinishing())
+                    mProgressDialog.cancel();
+                adapter.notifyDataSetChanged();
+
+
+
+            }
+
+        };
 
 
 
@@ -230,9 +246,10 @@ public class ListActivity extends ActionBarActivity {
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setCustomView(actionBarView);
         ArrayList<String> optionsList = new ArrayList<String>();
+        optionsList.add("All Plans");
+        optionsList.add("My Plans");
         optionsList.add("Friends' Plans");
-        optionsList.add("My Plan");
-        optionsList.add("2nd Degree Plans");
+        optionsList.add("Joined Plans");
         ArrayAdapter<String> dataAdapterForNavi = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optionsList);
         dataAdapterForNavi.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         naviSpinner.setAdapter(dataAdapterForNavi);
@@ -255,15 +272,7 @@ public class ListActivity extends ActionBarActivity {
 
         //String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
-        NetworkOperation networkOperation = new NetworkOperation();
-        //JSONObject getPlanListResponse = networkOperation.getPlanList(accessToken.getToken(), "all");
-        Log.i("a","a");
 
-        //get access token of facebook account from sharedPreferences
-        /*
-        String json = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).getString(MY_PREFS_NAME, "");
-        AccessToken accessToken1 = gsonAccessToken.fromJson(json, AccessToken.class);
-        */
 
 
 
@@ -299,4 +308,5 @@ public class ListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

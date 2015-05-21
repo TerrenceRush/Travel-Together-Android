@@ -2,7 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/actionBarBackground"
+        android:orientation="vertical" >
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,7 +82,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -99,7 +109,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/plan_description"
-                    android:text="Very good trip"/>
+                    android:text="Very good trip"
+                    android:textSize="13sp"/>
 
             </RelativeLayout>
             
@@ -114,8 +125,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#000000"
+        android:layout_height="2dp"
+        android:background="@color/actionBarBackground"
         android:orientation="vertical" >
     </LinearLayout>
 
