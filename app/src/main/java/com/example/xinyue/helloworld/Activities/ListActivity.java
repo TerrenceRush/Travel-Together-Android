@@ -333,6 +333,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
 
     public void NewPostLaunch(View v){
         Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
+        Intent openNewPostActivityIntent = new Intent(this, NewPostActivity.class);
+        startActivity(openNewPostActivityIntent);
     }
 
     @Override
