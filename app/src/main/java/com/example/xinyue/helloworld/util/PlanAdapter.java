@@ -66,8 +66,8 @@ public class PlanAdapter extends ArrayAdapter<PlanItem> {
         holder.plan_title.setText(les.getTitle());
         holder.plan_total_size.setText(Integer.toString(les.getGroupSize()));
         holder.plan_current_size.setText(Integer.toString(les.getGroupSize()));
-        holder.plan_destination.setText("To" + les.getDestination());
-        holder.plan_start_date.setText("Start on "+les.getDateFrom().split(" ")[0]);
+        holder.plan_destination.setText(les.getDestination());
+        holder.plan_start_date.setText(les.getDateFrom().split(" ")[0]);
         holder.plan_description.setText(les.getDescription());
         Drawable draw = getDrawable(les.getAvatar());
 

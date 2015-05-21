@@ -40,7 +40,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Xinyue Li"
-                android:textStyle="bold"
                 android:textSize="20sp"/>
 
             <TextView
@@ -64,18 +63,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/plan_destination"
-                    android:text="2015-05-18"
+                    android:text="To "
                     android:layout_alignParentLeft="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/plan_current_size"
-                    android:layout_alignParentRight="true"/>
+                    android:id="@+id/plan_destination"
+                    android:textStyle="bold"
+                    android:text="New York"
+                    android:textColor="#000000"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/plan_current_size"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/plan_total_size"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Enrolled"/>
+
+
+
+
+
+
+                </LinearLayout>
 
 
                 </RelativeLayout>
@@ -85,18 +125,29 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start on "
+                        android:layout_alignParentLeft="true"/>
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/plan_start_date"
                     android:text="5"
-                    android:layout_alignParentLeft="true"/>
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/plan_total_size"
-                    android:layout_alignParentRight="true"/>
+
+
+                </LinearLayout>
+
 
 
             </RelativeLayout>
