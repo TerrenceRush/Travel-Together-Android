@@ -133,44 +133,44 @@ public class ListActivity extends ActionBarActivity {
 
             new Thread(new Runnable(){
                 public void run(){
-//                    NetworkOperation networkOperation = new NetworkOperation();
-//                    JSONObject response = networkOperation.getPlanList(accessToken.getToken(), type);
-//                    if(response == null){
-//                        //Toast.makeText(context, "Empty list", Toast.LENGTH_LONG);
-//                    }
-//                    else{
-//                        try {
-//                            JSONObject data = response.getJSONObject("data");
-//                            JSONArray objs = data.getJSONArray("planlist");
-//                            listItems.clear();
-//                            for(int i=0; i<objs.length();i++){
-//                                JSONObject tmp = (JSONObject) objs.get(i);
-//                                PlanItem tmpItem =  new PlanItem();
-//                                tmpItem.setTitle(tmp.getString("title"));
-//                                //tmpItem.setCurrentSize(tmp.getInt("length"));
-//                                tmpItem.setGroupSize(tmp.getInt("limit"));
-//                                tmpItem.setName(((JSONObject)tmp.getJSONObject("holder")).getString("name"));
-//                                tmpItem.setDateFrom(new Date(tmp.getString("depart_time")));
-//                                //tmpItem.setDuration(tmp.getInt("")));
-//                                tmpItem.setDescription(tmp.getString("description"));
-//                                tmpItem.setDestination(tmp.getString("destination"));
-//                                listItems.add(tmpItem);
-//                                adapter.notifyDataSetChanged();
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-                    PlanItem faker1 = new PlanItem();
-                    faker1.setDestination("Seattle, WA");
-                    faker1.setDescription("Good trip");
-                    faker1.setName("Xinyue Li");
-                    faker1.setGroupSize(5);
-                    faker1.setTitle("HIIII");
-                    faker1.setDateFrom("2015-08-19");
-                    faker1.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
-                    listItems.add(faker1);
+                    NetworkOperation networkOperation = new NetworkOperation();
+                    JSONObject response = networkOperation.getPlanList(accessToken.getToken(), type);
+                    if(response == null){
+                        //Toast.makeText(context, "Empty list", Toast.LENGTH_LONG);
+                    }
+                    else{
+                        try {
+                            JSONArray objs = response.getJSONArray("data");
+                            listItems.clear();
+                            for(int i=0; i<objs.length();i++){
+                                JSONObject tmp = (JSONObject) objs.get(i);
+                                PlanItem tmpItem =  new PlanItem();
+                                tmpItem.setTitle(tmp.getString("title"));
+                                tmpItem.setCurrentSize(2);
+                                tmpItem.setGroupSize(tmp.getInt("limit"));
+                                tmpItem.setName(((JSONObject)tmp.getJSONObject("holder")).getString("name"));
+                                tmpItem.setDateFrom(tmp.getString("depart_time"));
+                                //tmpItem.setDuration(tmp.getInt("")));
+                                tmpItem.setDescription(tmp.getString("description"));
+                                tmpItem.setDestination(tmp.getString("destination"));
+                                tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
+                                listItems.add(tmpItem);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+//                    PlanItem faker1 = new PlanItem();
+//                    faker1.setDestination("Seattle, WA");
+//                    faker1.setDescription("Good trip");
+//                    faker1.setName("Xinyue Li");
+//                    faker1.setGroupSize(5);
+//                    faker1.setTitle("HIIII");
+//                    faker1.setDateFrom("2015-08-19");
+//                    faker1.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
+//                    listItems.add(faker1);
                     adapter.notifyDataSetChanged();
 
                 }
@@ -266,39 +266,6 @@ public class ListActivity extends ActionBarActivity {
         */
 
 
-        //request to backend to get the specific userId  ----- old version --------
-        /*RequestQueue queue = Volley.newRequestQueue(this);
-        String getTokenRoute = "/";
-        String getTokenRequestUrl = getSharedPreferences("serverInfo", MODE_PRIVATE).getString("serverHost","")+getTokenRoute;
-        StringRequest getTokenRequest = new StringRequest(Request.Method.POST, getTokenRequestUrl,
-                new Response.Listener<String>(){
-                    @Override
-                public void onResponse(String response){
-                        Log.i("i", response);
-                        SharedPreferences.Editor editor2 = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                        editor2.putString("userToken", response);
-                        editor2.commit();
-                }
-        },
-                new Response.ErrorListener(){
-                    @Override
-                public void onErrorResponse(VolleyError error){
-                        Log.i("i", "error");
-                        Log.i("i", error.toString());
-                    }
-
-                }
-        ){
-            @Override
-        protected Map<String, String> getParams(){
-                Map<String, String> params = new HashMap<String,String>();
-                params.put("fbAccessToken", accessToken.getToken());
-                return params;
-
-            }
-        };
-        queue.add(getTokenRequest);//add the request to queue, when the network thread pool has available thread, it will be executed
-        */
 
         //set the content view of frame layout
         Fragment fragment = new contentFragment();
