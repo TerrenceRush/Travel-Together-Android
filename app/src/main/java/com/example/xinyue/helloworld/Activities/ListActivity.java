@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -55,17 +56,21 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 
-public class ListActivity extends ActionBarActivity {
+public class ListActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener{
     private static AccessToken accessToken;
     private Spinner naviSpinner;
     public static final String MY_PREFS_NAME = "tokenInfo";
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavigationDrawerItemTitles;
+    private static List<String> friendList = new ArrayList<String>();
+    private static HashSet<String> friendSet = new HashSet<>();
 
 
     public static class contentFragment extends Fragment implements
@@ -99,34 +104,10 @@ public class ListActivity extends ActionBarActivity {
                     listItems);
             mListView.setAdapter(adapter);
             mPullDownView.setShowHeader();
+            Bundle listTypeArgs = getArguments();
+            type = listTypeArgs.getString("type");
 
 
-
-            final List<String> friendList = new ArrayList<String>();
-            final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, friendList);
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            //request for facebook friend list
-            GraphRequest request = GraphRequest.newMyFriendsRequest(ListActivity.accessToken, new GraphRequest.GraphJSONArrayCallback() {
-                @Override
-                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-
-//                mainTextView.setText(jsonArray.optString("gender"));
-//                Log.i("Facebook", friends.toString());
-                    for(int i=0;i<jsonArray.length();i++){
-                        try {
-                            friendList.add(((JSONObject) jsonArray.get(i)).optString("name"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    //friendListSpinner.setAdapter(dataAdapter);
-
-
-                }
-            });
-
-            request.executeAsync();
             loadPlans(false);
             return rootView;
 
@@ -139,7 +120,14 @@ public class ListActivity extends ActionBarActivity {
             new Thread(new Runnable(){
                 public void run(){
                     NetworkOperation networkOperation = new NetworkOperation();
-                    JSONObject response = networkOperation.getPlanList(accessToken.getToken(), type);
+                    JSONObject response;
+                    if(type.equals("friend")){
+                        response = networkOperation.getPlanList(accessToken.getToken(), "all");
+                    }
+                    else {
+                        response = networkOperation.getPlanList(accessToken.getToken(), type);
+
+                    }
                     if(response == null){
                         //Toast.makeText(context, "Empty list", Toast.LENGTH_LONG);
                     }
@@ -151,15 +139,27 @@ public class ListActivity extends ActionBarActivity {
                                 JSONObject tmp = (JSONObject) objs.get(i);
                                 PlanItem tmpItem =  new PlanItem();
                                 tmpItem.setTitle(tmp.getString("title"));
-                                tmpItem.setCurrentSize(2);
+                                tmpItem.setCurrentSize(tmp.getInt("count"));
                                 tmpItem.setGroupSize(tmp.getInt("limit"));
-                                tmpItem.setName(((JSONObject)tmp.getJSONObject("holder")).getString("name"));
+                                tmpItem.setName((tmp.getJSONObject("holder")).getString("name"));
+                                tmpItem.setHolderId(tmp.getJSONObject("holder").getString("id"));
                                 tmpItem.setDateFrom(tmp.getString("depart_time"));
-                                //tmpItem.setDuration(tmp.getInt("")));
+                                tmpItem.setDuration(tmp.getInt("length"));
                                 tmpItem.setDescription(tmp.getString("description"));
                                 tmpItem.setDestination(tmp.getString("destination"));
+                                //tmpItem.setAvatar(tmp.getJSONObject("holder").getString("avatar"));
                                 tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
                                 listItems.add(tmpItem);
+                            }
+                            if(type.equals("friend")){
+                                for(int i = 0;i<listItems.size();i++){
+
+                                    PlanItem tmp = listItems.get(i);
+
+                                    if(!friendSet.contains(tmp.getHolderId()))
+                                        listItems.remove(i);
+
+                                }
                             }
                             mUIHandler.sendEmptyMessage(0);
 
@@ -259,7 +259,7 @@ public class ListActivity extends ActionBarActivity {
         ArrayAdapter<String> dataAdapterForNavi = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optionsList);
         dataAdapterForNavi.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         naviSpinner.setAdapter(dataAdapterForNavi);
-
+        naviSpinner.setOnItemSelectedListener(this);
 
 
         Intent intent = getIntent();
@@ -278,16 +278,31 @@ public class ListActivity extends ActionBarActivity {
 
         //String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
+        //            final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, friendList);
+//            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //request for facebook friend list
+        GraphRequest request = GraphRequest.newMyFriendsRequest(ListActivity.accessToken, new GraphRequest.GraphJSONArrayCallback() {
+            @Override
+            public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+
+//                mainTextView.setText(jsonArray.optString("gender"));
+//                Log.i("Facebook", friends.toString());
+                for(int i=0;i<jsonArray.length();i++){
+                    try {
+                        friendList.add(((JSONObject) jsonArray.get(i)).optString("id"));
+                        friendSet.add(((JSONObject) jsonArray.get(i)).optString("id"));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 
+            }
+        });
+        request.executeAsync();
 
-
-        //set the content view of frame layout
-        Fragment fragment = new contentFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
 
 
     }
@@ -320,8 +335,51 @@ public class ListActivity extends ActionBarActivity {
         Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
     }
 
-    public void selectOption(View v){
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
 
+        //set the content view of frame layout
+        Fragment fragment = new contentFragment();
+        Bundle listTypeArgs = new Bundle();
+
+        switch(pos){
+            case 0:{
+                listTypeArgs.putString("type", "all");
+                break;
+            }
+            case 1:{
+                listTypeArgs.putString("type", "mine");
+                break;
+            }
+            case 2:{
+                listTypeArgs.putString("type", "friend");
+                break;
+            }
+            case 3:{
+                listTypeArgs.putString("type", "joined");
+                break;
+            }
+            default:{
+                listTypeArgs.putString("type", "all");
+                break;
+            }
+
+        }
+        fragment.setArguments(listTypeArgs);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+
 
 }

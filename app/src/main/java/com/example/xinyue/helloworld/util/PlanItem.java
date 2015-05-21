@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class PlanItem {
     private String name;
+    private String holderId;
     private String title;
     private String destination;
     private String dateFrom;
@@ -24,6 +25,14 @@ public class PlanItem {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public String getHolderId(){
+        return this.holderId;
+    }
+
+    public void setHolderId(String holderId){
+        this.holderId = holderId;
     }
 
     public String getTitle(){
