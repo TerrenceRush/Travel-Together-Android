@@ -320,7 +320,8 @@ public class ListActivity extends ActionBarActivity {
         Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
     }
 
-    public void selectOption(View v)
+    public void selectOption(View v){
+
     }
 
 }

@@ -37,6 +37,9 @@ import com.facebook.login.LoginManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.facebook.GraphRequest.GraphJSONObjectCallback;
 
 
@@ -77,6 +80,7 @@ public class Welcome extends Activity {
     public static final String MY_PREFS_NAME = "tokenInfo";
     private SystemUiHider mSystemUiHider;
     CallbackManager callbackManager;
+    private Uri user_avatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,42 +180,40 @@ public class Welcome extends Activity {
                     @Override
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                         Profile.setCurrentProfile(currentProfile);
-                        final Uri user_avatar = currentProfile.getProfilePictureUri(50, 50);
+                        user_avatar = currentProfile.getProfilePictureUri(50, 50);
                         settings.putString("userAvatar", user_avatar.toString());
                         settings.commit();
+
+                        //do authenrication
+                        new Thread(new Runnable() {
+                            public void run() {
+                                NetworkOperation networkOperation = new NetworkOperation();
+                                Map<String, String> params = new HashMap<String, String>();
+                                params.put("avatar", user_avatar.toString());
+                                JSONObject requestData = new JSONObject(params);
+                                JSONObject response = networkOperation.authenticate(loginResult.getAccessToken().getToken(), requestData.toString());
+                                try {
+                                    JSONObject data = response.getJSONObject("data");
+                                    String name = data.getString("name");
+                                    String id = data.getString("id");
+                                    settings.putString("userId", id);
+                                    settings.putString("name", name);
+                                    settings.commit();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                //create intent and start list activity
+                                openListActivityIntent.putExtra("accessTokenBundle", bundle);
+                                openListActivityIntent.setAction(Intent.ACTION_VIEW);
+                                startActivity(openListActivityIntent);
+                            }
+                        }).start();
 
                         this.stopTracking();
                     }
                 };
                 profileTracker.startTracking();
-
-
-
-
-
-                //do authenrication
-                new Thread(new Runnable() {
-                    public void run() {
-                        NetworkOperation networkOperation = new NetworkOperation();
-                        JSONObject response = networkOperation.authenticate(loginResult.getAccessToken().getToken());
-                        try {
-                            JSONObject data = response.getJSONObject("data");
-                            String name = data.getString("name");
-                            String id = data.getString("id");
-                            settings.putString("userId", id);
-                            settings.putString("name", name);
-
-                            settings.commit();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        //create intent and start list activity
-                        openListActivityIntent.putExtra("accessTokenBundle", bundle);
-                        openListActivityIntent.setAction(Intent.ACTION_VIEW);
-                        startActivity(openListActivityIntent);
-                    }
-                }).start();
 
             }
 

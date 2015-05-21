@@ -8,8 +8,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 
 /**
@@ -44,12 +47,22 @@ public class NetworkOperation{
         return null;
     }
 
-    public JSONObject authenticate(String accessToken){
+    public JSONObject authenticate(String accessToken, String data){
         ConnNet connNet = new ConnNet();
         String url = "auth/"+accessToken;
-        HttpURLConnection conn = connNet.getGetConn(url);
+        HttpURLConnection conn = connNet.getPostConn(url);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept", "application/json");
+        OutputStream os = null;
+
         try {
             conn.connect();
+            os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            os.close();
             int responseCode = conn.getResponseCode();
             if(responseCode == 200){
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
