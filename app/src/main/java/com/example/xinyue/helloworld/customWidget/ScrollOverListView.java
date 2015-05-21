@@ -488,7 +488,7 @@ public class ScrollOverListView extends ListView implements OnScrollListener {
 	@SuppressWarnings("deprecation")
 	public void onRefreshComplete() {
 		state = DONE;
-		lastUpdatedTextView.setText("最近更新:" + new Date().toLocaleString());
+		lastUpdatedTextView.setText("Last update:" + new Date().toLocaleString());
 		changeHeaderViewByState();
 	}
 

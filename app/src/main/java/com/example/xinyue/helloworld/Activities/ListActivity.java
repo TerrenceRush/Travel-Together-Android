@@ -127,12 +127,12 @@ public class ListActivity extends ActionBarActivity {
             });
 
             request.executeAsync();
-            loadPlans();
+            loadPlans(false);
             return rootView;
 
         }
 
-        public void loadPlans(){
+        public void loadPlans(final boolean ifRefresh){
             if (this.getActivity() != null && !(this.getActivity()).isFinishing())
                 mProgressDialog.show();
 
@@ -163,9 +163,13 @@ public class ListActivity extends ActionBarActivity {
                             }
                             mUIHandler.sendEmptyMessage(0);
 
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        if (ifRefresh)
+                            mPullDownView.RefreshComplete();
+                        mPullDownView.notifyDidMore();
                     }
 
 
@@ -182,13 +186,13 @@ public class ListActivity extends ActionBarActivity {
         @Override
         public void onRefresh() {
 
-            loadPlans();
+            loadPlans(true);
         }
 
         @Override
         public void onMore() {
 
-            loadPlans();
+            loadPlans(false);
         }
 
         @SuppressLint("HandlerLeak")
@@ -200,6 +204,8 @@ public class ListActivity extends ActionBarActivity {
                 //do remember to dismiss dialog when exiting an activity.
                 if (context != null && !((Activity) context).isFinishing())
                     mProgressDialog.cancel();
+
+                //Only the original thread that created a view hierarchy can touch its views. So I have to put it here not in the thread of network operation.
                 adapter.notifyDataSetChanged();
 
 
