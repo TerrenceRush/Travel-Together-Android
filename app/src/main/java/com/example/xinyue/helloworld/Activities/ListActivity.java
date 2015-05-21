@@ -107,6 +107,18 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
             Bundle listTypeArgs = getArguments();
             type = listTypeArgs.getString("type");
 
+            //set plan item click listener
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(context, listItems.get(position-1).getName(), Toast.LENGTH_LONG).show();
+                    Intent openDetailActivityIntent = new Intent(context, MapsActivity.class);
+
+
+                }
+            });
+
 
             loadPlans(false);
             return rootView;
@@ -332,7 +344,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     }
 
     public void NewPostLaunch(View v){
-        Toast.makeText(this, "Hello World", Toast.LENGTH_LONG).show();
         Intent openNewPostActivityIntent = new Intent(this, NewPostActivity.class);
         startActivity(openNewPostActivityIntent);
     }
