@@ -18,26 +18,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="db4e96b0-9cc8-4f37-b226-b50115f38bb5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Helloworld.iml" afterPath="$PROJECT_DIR$/Helloworld.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/ListActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/ListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/MapsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/MapsActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/NewPostActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/NewPostActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/util/PlanItem.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/util/PlanItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TravelTogether.iml" afterPath="$PROJECT_DIR$/TravelTogether.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/circleimageview_1_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/circleimageview_1_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/facebook_android_sdk_4_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/facebook_android_sdk_4_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_ads_7_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_ads_7_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_gcm_7_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_gcm_7_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_22_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_22_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Travel-Together-Android.iws" />
@@ -72,7 +52,7 @@
       <file leaf-file-name="MapsActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/MapsActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.9175532">
+            <state vertical-scroll-proportion="0.92021275">
               <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
               <folding />
             </state>
@@ -105,17 +85,9 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <marker date="1432325566000" expanded="true" signature="4761:4818" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="4935:5004" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5261:5619" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5327:5602" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5719:6212" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5840:6198" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5906:6181" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="5959:6159" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="118032:118074" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="118032:118092" placeholder="..." />
-                <marker date="1432325566000" expanded="true" signature="118032:118105" placeholder="..." />
+                <marker date="1432325851000" expanded="true" signature="112172:112214" placeholder="..." />
+                <marker date="1432325851000" expanded="true" signature="112172:112232" placeholder="..." />
+                <marker date="1432325851000" expanded="true" signature="112172:112245" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -1316,11 +1288,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="717" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.327787" sideWeight="0.49676898" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.327787" sideWeight="0.49676898" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1649,17 +1621,9 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1432325566000" expanded="true" signature="4761:4818" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="4935:5004" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5261:5619" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5327:5602" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5719:6212" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5840:6198" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5906:6181" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="5959:6159" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="118032:118074" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="118032:118092" placeholder="..." />
-            <marker date="1432325566000" expanded="true" signature="118032:118105" placeholder="..." />
+            <marker date="1432325851000" expanded="true" signature="112172:112214" placeholder="..." />
+            <marker date="1432325851000" expanded="true" signature="112172:112232" placeholder="..." />
+            <marker date="1432325851000" expanded="true" signature="112172:112245" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1690,7 +1654,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/xinyue/helloworld/Activities/MapsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.9175532">
+        <state vertical-scroll-proportion="0.92021275">
           <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
           <folding />
         </state>
