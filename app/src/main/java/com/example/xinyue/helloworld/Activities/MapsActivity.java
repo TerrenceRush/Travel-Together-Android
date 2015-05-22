@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.Fragments.recomFragment;
+import com.example.xinyue.helloworld.util.PlanItem;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,11 +28,18 @@ import java.util.List;
 public class MapsActivity extends ActionBarActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private PlanItem currentItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        /*
+            get the current plan item
+         */
+        currentItem = (PlanItem)getIntent().getSerializableExtra("planItem");
+
         String title = "find friends to SF";
         String depart_time = "July-01-2015";
         String length = "2";
