@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:myapp="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.xinyue.helloworld.ListActivity">
+    tools:context="com.example.xinyue.helloworld.Activities.ListActivity">
     <!--
     <item android:id="@+id/newPost"
         android:title="newPost"

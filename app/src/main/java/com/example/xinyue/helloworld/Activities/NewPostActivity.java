@@ -1,4 +1,4 @@
-package com.example.xinyue.helloworld;
+package com.example.xinyue.helloworld.Activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.xinyue.helloworld.Activities.ListActivity;
 import com.example.xinyue.helloworld.R;
 
 import java.text.DateFormat;

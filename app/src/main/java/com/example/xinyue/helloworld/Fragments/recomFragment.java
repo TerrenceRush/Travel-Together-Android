@@ -1,4 +1,4 @@
-package com.example.xinyue.helloworld;
+package com.example.xinyue.helloworld.Fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.xinyue.helloworld.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.zip.Inflater;
@@ -88,68 +91,51 @@ public class recomFragment extends Fragment {
         ListView listview = (ListView) rootView.findViewById(R.id.listview_recom);
         listview.setAdapter(placeRecom);
 
+        GetRecommendation fetchPlace = new GetRecommendation();
+        fetchPlace.execute();
 
         return rootView;
     }
 
-    private String parseRecommendation (String result) throws JSONException{
+    private String[] parseRecommendation (String result) throws JSONException{
         JSONObject obj = new JSONObject(result);
 
 //            String result = obj.toString();
 //            return result;
         Log.d("String size", "size"+result.length());
         JSONObject response = obj.getJSONObject("response");
-        Log.d("response", response.toString());
-        JSONObject bounds = response.getJSONObject("suggestedBounds");
-        Log.d("bounds", bounds.toString());
-        JSONArray groups = response.getJSONArray("groups");
-        Log.d("groups", groups.toString());
-        JSONObject recommendation = groups.getJSONObject(0);
-        Log.d("recommendation", recommendation.toString());
-        JSONArray items = recommendation.getJSONArray("items");
-        JSONObject item = items.getJSONObject(0);
-        Log.d("item", item.toString());
-        JSONObject venue = item.getJSONObject("venue");
-        String name = venue.getString("name");
-        JSONArray categories = venue.getJSONArray("categories");
-        JSONObject category = categories.getJSONObject(0);
-        String type = category.getString("name");
-
-        String contact = venue.getJSONObject("contact").getString("formattedPhone");
-
-        String tips = item.getJSONArray("tips").getJSONObject(0).getString("text");
-        Log.d("test2", "venue :" + name + type + contact + tips);
-        JSONObject venueRec = new JSONObject();
-        venueRec.put("name", name);
-        venueRec.put("type", type);
-        venueRec.put("contact", contact);
-        venueRec.put("tips", tips);
-        String res = venueRec.toString();
-        Log.v("test", res);
-
-        return venueRec.toString();
-    }
-
-    protected String convertStreamToString(java.io.InputStream is) {
-        //@SuppressWarnings("resource")
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+        JSONArray venues = response.getJSONArray("venues");
+        String[] recom = new String[10];
+        for (int i = 0; i < 10; i++) {
+            StringBuilder sb = new StringBuilder();
+            JSONObject venue = venues.getJSONObject(i);
+            String name = venue.getString("name");
+            String type = venue.getJSONArray("categories").getJSONObject(0).getString("name");
+            String distance = venue.getJSONObject("location").getString("distance");
+            sb.append(String.format("%-20s", name) + "\n");
+            sb.append(String.format("%-30s", "type: "+ type));
+            sb.append(String.format("%-30s", "dis: "+ distance));
+            recom[i] = sb.toString();
+        }
+        return recom;
     }
 
 
     public void generateNoteOnSD(String sFileName, String sBody){
         try
         {
-            File root = new File(Environment.getExternalStorageDirectory(), "Notes");
-            if (!root.exists()) {
-                root.mkdirs();
-            }
-            File gpxfile = new File(root, sFileName);
-            FileWriter writer = new FileWriter(gpxfile);
-            writer.append(sBody);
-            writer.flush();
-            writer.close();
-            //Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            //This will get the SD Card directory and create a folder named MyFiles in it.
+            File sdCard = Environment.getExternalStorageDirectory();
+            File directory = new File (sdCard.getAbsolutePath() + "/MyFiles");
+            directory.mkdirs();
+
+            //Now create the file in the above directory and write the contents into it
+            File file = new File(directory, sFileName);
+            FileOutputStream fOut = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write(sBody);
+            osw.flush();
+            osw.close();
         }
         catch(IOException e)
         {
@@ -157,11 +143,11 @@ public class recomFragment extends Fragment {
         }
     }
 
-    public class GetRecommendation extends AsyncTask<Void, Void, Void>  {
+    public class GetRecommendation extends AsyncTask<String, Void, String[]>  {
         private final String LOG_TAG = GetRecommendation.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params){
+        protected String[] doInBackground(String... params){
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -182,7 +168,7 @@ public class recomFragment extends Fragment {
                 final String lat = "40.7463956";
                 final String lon = "-73.9852992";
                 String url1 = "https://api.foursquare.com/v2/venues/search?client_id=" +
-                        clientID + "&client_secret=" + clientSecret + "&v=20130815&ll=40.7463956,-73.9852992&radius=2";
+                        clientID + "&client_secret=" + clientSecret + "&v=20150519&ll=40.7463956,-73.9852992";
 
                 // Create the request to Foursqure, and open the connection
                 URL url = new URL(url1);
@@ -190,6 +176,8 @@ public class recomFragment extends Fragment {
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
+//		        URLConnection urlConnection = url.openConnection();
+//		        InputStream inputStream = (InputStream) urlConnection.getContent();
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
@@ -214,18 +202,11 @@ public class recomFragment extends Fragment {
                     return null;
                 }
                 recomStr = buffer.toString();
-                Log.d("permission", Environment.getExternalStorageState());
-//                Log.d("their method", recomStr);
+//                Log.d("permission", Environment.getExternalStorageState());
+                Log.d("their method", recomStr);
 
-                  generateNoteOnSD("response", recomStr);
-//                String result = null;
-//                try {
-//                    result = parseRecommendation(recomStr);
-//                } catch (Exception e) {
-//                    Log.e(LOG_TAG, "ERROR PARSING JSON OBJECT");
-//                }
-//
-//                Log.v("result", result);
+                //generateNoteOnSD("response.txt", recomStr);
+
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
@@ -244,7 +225,25 @@ public class recomFragment extends Fragment {
                     }
                 }
             }
-            return null;
+
+            try {
+                return parseRecommendation(recomStr);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "ERROR PARSING JSON OBJECT");
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                placeRecom.clear();
+                for(String dayForecastStr : result) {
+                    placeRecom.add(dayForecastStr);
+                }
+                // New data is back from the server.  Hooray!
+            }
         }
     }
 }

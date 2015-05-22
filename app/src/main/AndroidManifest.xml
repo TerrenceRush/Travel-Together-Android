@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!--<uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>-->
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -29,30 +31,29 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".Welcome"
+            android:name=".Activities.Welcome"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".ListActivity"
+            android:name=".Activities.ListActivity"
             android:theme="@style/ActionBarTheme" >
         </activity>
         <activity
-            android:name=".DetailActivity"
-            android:label="@string/title_activity_detail" >
-        </activity>
-        <activity
-            android:name=".NewPostActivity"
+            android:name=".Activities.NewPostActivity"
             android:label="@string/title_activity_new_post" >
 
         </activity>
@@ -65,18 +66,13 @@
             android:value="AIzaSyAmsSPsIpp9cM0FL6J1Y6yChfAWODn67Dc" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps" >
         </activity>
 
         <activity
-            android:name=".Recommendation"
-            android:label="Foursquare">
-        </activity>
-        <activity
-            android:name=".TestActivity"
+            android:name=".Activities.TestActivity"
             android:label="@string/app_name" >
-
         </activity>
 
     </application>

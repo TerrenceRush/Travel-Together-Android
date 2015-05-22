@@ -5,10 +5,13 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/newPost"
-        android:src="@drawable/ic_action_edit"
+        android:id="@+id/filter"
+        android:src="@drawable/ic_setting"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
         android:background="@android:color/transparent"/>
+
 
     <Spinner
         android:layout_width="wrap_content"
@@ -17,13 +20,17 @@
         android:id="@+id/navigationSpinner"
         android:layout_centerInParent="true"/>
 
+
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/filter"
-        android:src="@drawable/ic_action_settings"
+        android:id="@+id/newPost"
+        android:src="@drawable/ic_pen"
         android:layout_alignParentRight="true"
-        android:background="@android:color/transparent"/>
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:onClick="NewPostLaunch"/>
 
 
 

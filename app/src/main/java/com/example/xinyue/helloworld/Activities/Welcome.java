@@ -1,5 +1,8 @@
-package com.example.xinyue.helloworld;
+package com.example.xinyue.helloworld.Activities;
 
+import com.example.xinyue.helloworld.Activities.ListActivity;
+import com.example.xinyue.helloworld.Network.NetworkOperation;
+import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -7,9 +10,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.view.MotionEvent;
 import android.view.View;
 import android.content.Intent;
@@ -17,16 +22,25 @@ import android.util.Log;
 import android.widget.TextView;
 
 
-import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.facebook.GraphRequest.GraphJSONObjectCallback;
 
 
 /**
@@ -62,8 +76,11 @@ public class Welcome extends Activity {
     /**
      * The instance of the {@link SystemUiHider} for this activity.
      */
+
+    public static final String MY_PREFS_NAME = "tokenInfo";
     private SystemUiHider mSystemUiHider;
     CallbackManager callbackManager;
+    private Uri user_avatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,10 +148,7 @@ public class Welcome extends Activity {
         });
 
         //store server information in sharedPreferences
-        SharedPreferences.Editor settings = getSharedPreferences("serverInfo", MODE_PRIVATE).edit();
-        String serverHost = "";
-        settings.putString("serverHost", serverHost);
-        settings.commit();
+        final SharedPreferences.Editor settings = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
         //set font for the slogan
         TextView slogan = (TextView) findViewById(R.id.welcomeText);
@@ -151,17 +165,55 @@ public class Welcome extends Activity {
         //loginButton configurations
         LoginButton loginButton = (LoginButton) contentView.findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("public_profile");
         LoginManager.getInstance().logOut();
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
                 Log.i("TAG", "success");
-                Bundle bundle = new Bundle();
+                final Bundle bundle = new Bundle();
                 bundle.putParcelable("accessToken", loginResult.getAccessToken());
-                openListActivityIntent.putExtra("accessTokenBundle", bundle);
-                openListActivityIntent.setAction(Intent.ACTION_VIEW);
-                startActivity(openListActivityIntent);
+
+                //get user avatar
+                ProfileTracker profileTracker = new ProfileTracker() {
+                    @Override
+                    protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                        Profile.setCurrentProfile(currentProfile);
+                        user_avatar = currentProfile.getProfilePictureUri(50, 50);
+                        settings.putString("userAvatar", user_avatar.toString());
+                        settings.commit();
+
+                        //do authenrication
+                        new Thread(new Runnable() {
+                            public void run() {
+                                NetworkOperation networkOperation = new NetworkOperation();
+                                Map<String, String> params = new HashMap<String, String>();
+                                params.put("avatar", user_avatar.toString());
+                                JSONObject requestData = new JSONObject(params);
+                                JSONObject response = networkOperation.authenticate(loginResult.getAccessToken().getToken(), requestData.toString());
+                                try {
+                                    JSONObject data = response.getJSONObject("data");
+                                    String name = data.getString("name");
+                                    String id = data.getString("id");
+                                    settings.putString("userId", id);
+                                    settings.putString("name", name);
+                                    settings.commit();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                //create intent and start list activity
+                                openListActivityIntent.putExtra("accessTokenBundle", bundle);
+                                openListActivityIntent.setAction(Intent.ACTION_VIEW);
+                                startActivity(openListActivityIntent);
+                            }
+                        }).start();
+
+                        this.stopTracking();
+                    }
+                };
+                profileTracker.startTracking();
 
             }
 

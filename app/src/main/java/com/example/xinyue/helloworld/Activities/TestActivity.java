@@ -1,8 +1,11 @@
-package com.example.xinyue.helloworld;
+package com.example.xinyue.helloworld.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+
+import com.example.xinyue.helloworld.Fragments.recomFragment;
+import com.example.xinyue.helloworld.R;
 
 
 /**

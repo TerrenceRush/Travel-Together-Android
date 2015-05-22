@@ -1,24 +1,30 @@
-package com.example.xinyue.helloworld;
+package com.example.xinyue.helloworld.Activities;
 
-import android.support.v4.app.FragmentActivity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.xinyue.helloworld.R;
+import com.example.xinyue.helloworld.Fragments.recomFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Text;
+import java.io.IOException;
+import java.util.List;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends ActionBarActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
@@ -50,12 +56,40 @@ public class MapsActivity extends FragmentActivity {
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
         descriptionView.setText("Why this place is fun : " + describtion);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new recomFragment())
+                .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        menu.add(1,1,1,"test");
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if (id == R.id.help) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -98,11 +132,29 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(-37.813, 144.962)).title("Marker")
+        String city_name = "new york";
+        LatLng ll = null;
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(this);
+                List<Address> addresses = gc.getFromLocationName(city_name, 5);
+                for (Address add : addresses) {
+                    if (add.hasLatitude() && add.hasLongitude()) {
+                        ll = new LatLng(add.getLatitude(), add.getLongitude());
+                        break;
+                    }
+                }
+            }
+            catch (IOException e) {
+
+            }
+        }
+        Marker marker = mMap.addMarker(new MarkerOptions().position(ll).title("Marker")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         LatLng position = marker.getPosition();
         CameraUpdate cameraPosition = CameraUpdateFactory.newLatLngZoom(position, 11.0f);
         mMap.animateCamera(cameraPosition);
+
 
     }
 
