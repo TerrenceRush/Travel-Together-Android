@@ -69,7 +69,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mNavigationDrawerItemTitles;
-    private static List<String> friendList = new ArrayList<String>();
+    private static ArrayList<String> friendIdList = new ArrayList<String>();
+    private static ArrayList<String> friendNameList = new ArrayList<>();
     private static HashSet<String> friendSet = new HashSet<>();
 
 
@@ -114,6 +115,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(context, listItems.get(position-1).getName(), Toast.LENGTH_LONG).show();
                     Intent openDetailActivityIntent = new Intent(context, MapsActivity.class);
+
 
 
                 }
@@ -302,7 +304,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
 //                Log.i("Facebook", friends.toString());
                 for(int i=0;i<jsonArray.length();i++){
                     try {
-                        friendList.add(((JSONObject) jsonArray.get(i)).optString("id"));
+                        friendIdList.add(((JSONObject) jsonArray.get(i)).optString("id"));
+                        friendNameList.add(((JSONObject) jsonArray.get(i)).optString("name"));
                         friendSet.add(((JSONObject) jsonArray.get(i)).optString("id"));
 
                     } catch (JSONException e) {
@@ -336,7 +339,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.filter) {
-            int a = 5;
             return true;
         }
 
@@ -345,6 +347,12 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
 
     public void NewPostLaunch(View v){
         Intent openNewPostActivityIntent = new Intent(this, NewPostActivity.class);
+
+        /*
+        send friend list to new post activity
+         */
+        openNewPostActivityIntent.putStringArrayListExtra("friendIdList", friendIdList);
+        openNewPostActivityIntent.putStringArrayListExtra("friendNameList", friendNameList);
         startActivity(openNewPostActivityIntent);
     }
 

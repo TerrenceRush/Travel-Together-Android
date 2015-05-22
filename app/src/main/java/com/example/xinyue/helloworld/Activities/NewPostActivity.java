@@ -26,6 +26,7 @@ import com.example.xinyue.helloworld.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,11 +34,23 @@ public class NewPostActivity extends Activity {
     private EditText groupSize;
     private EditText departureDate;
     private EditText returnDate;
+    private ArrayList<String> friendIdList = new ArrayList<>();
+    private ArrayList<String> friendNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
+
+        if (getIntent().getExtras() != null) {
+            for(String a : getIntent().getExtras().getStringArrayList("friendIdList")) {
+                friendIdList.add(a);
+            }
+            for(String a : getIntent().getExtras().getStringArrayList("friendNameList")) {
+                friendNameList.add(a);
+            }
+
+        }
         //addListenerOnButton();
         //addListenerOnButton1();
         addListenerOnGroupSize();
