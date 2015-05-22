@@ -2,12 +2,13 @@ package com.example.xinyue.helloworld.util;
 
 import android.net.Uri;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by xinyue on 5/18/15.
  */
-public class PlanItem {
+public class PlanItem implements Serializable{
     private String name;
     private String holderId;
     private String title;
