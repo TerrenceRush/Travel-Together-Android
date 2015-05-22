@@ -31,6 +31,23 @@ public class ConnNet {
 
     }
 
+    public HttpURLConnection getDeleteConn(String urlPath) {
+        String finalUrl = apiHOST + urlPath;
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(finalUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return connection;
+
+    }
+
     public HttpURLConnection getGetConn(String urlPath){
         String finalUrl = apiHOST + urlPath;
         HttpURLConnection connection = null;

@@ -1,17 +1,24 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.Fragments.recomFragment;
+import com.facebook.AccessToken;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +27,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,6 +49,14 @@ public class MapsActivity extends ActionBarActivity{
         String participants = "Jessica";
         String holder = "David";
         String describtion = "Let's blow the roof off";
+
+        final String MY_PREFS_NAME = "tokenInfo";
+
+//
+
+        loadPlan();
+
+
 
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
@@ -60,6 +78,12 @@ public class MapsActivity extends ActionBarActivity{
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, new recomFragment())
                 .commit();
+
+//        getActionBar().setTitle("Detail of the Plan");
+//        getActionBar().setBackgroundDrawable(new
+//                ColorDrawable(Color.parseColor("#33B5E5")));
+
+
     }
 
     @Override
@@ -68,6 +92,20 @@ public class MapsActivity extends ActionBarActivity{
         setUpMapIfNeeded();
     }
 
+
+    public void loadPlan () {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String usertoken = "CAAMzoVZAzOQEBAP86sD3nhN83siCE94ZAXgP8UZCOyNZC6ak67gSZBrhpT1" +
+                        "ZABq35USyq6ssTp2iI2zlPvOpK4QDMu2FiOIcT1UKtaZAV1F6OTd5ZCBZC6UeAumWtoIfgsiokRGNocYJqDYUOoodPr" +
+                        "emeRNZCOW9ZBMzNkBZA6znUTQVm0D9kVYq1rs3d6I4XX1RAKxqFxZA7PyEf9WQAOo6DzEpC" ;
+                NetworkOperation no= new NetworkOperation();
+                JSONObject allPlan = no.getPlanList(usertoken, "8");
+                Log.v("plan", allPlan.toString());
+            }
+        }).start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,15 +117,38 @@ public class MapsActivity extends ActionBarActivity{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        menu.add(1,1,1,"test");
+        boolean myPlan = true;
+        if (myPlan) {
+            menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+            menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+        }
+        else {
+            menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+            menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if (id == R.id.help) {
-            return true;
+        String usertoken = "CAAMzoVZAzOQEBAP86sD3nhN83siCE94ZAXgP8UZCOyNZC6ak67gSZBrhpT1" +
+                "ZABq35USyq6ssTp2iI2zlPvOpK4QDMu2FiOIcT1UKtaZAV1F6OTd5ZCBZC6UeAumWtoIfgsiokRGNocYJqDYUOoodPr" +
+                "emeRNZCOW9ZBMzNkBZA6znUTQVm0D9kVYq1rs3d6I4XX1RAKxqFxZA7PyEf9WQAOo6DzEpC" ;
+        NetworkOperation no = new NetworkOperation();
+        switch (item.getItemId()) {
+            case 1:
+                JSONObject allPlan = no.getPlanList(usertoken, "8");
+                Log.v("plan", allPlan.toString());
+                break;
+            case 2:
+                JSONObject delete = no.planActions("delete", usertoken, "8");
+                Log.v("plan", delete.toString()); break;
+            case 3:
+                JSONObject join = no.planActions("join",usertoken, "8");
+                Log.v("plan", join.toString());  break;
+            case 4:
+                JSONObject unjoin = no.planActions("plan/unjoin",usertoken, "8");
+                Log.v("plan", unjoin.toString());  break;
         }
         return super.onOptionsItemSelected(item);
     }
