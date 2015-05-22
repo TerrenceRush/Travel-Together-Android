@@ -16,6 +16,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <provider android:authorities="com.facebook.app.FacebookContentProvider901192963275009"
+        android:name="com.facebook.FacebookContentProvider"
+        android:exported="true"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

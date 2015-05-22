@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -7,12 +8,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.Fragments.recomFragment;
 import com.example.xinyue.helloworld.util.PlanItem;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,11 +38,21 @@ public class MapsActivity extends ActionBarActivity{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private PlanItem currentItem;
+    CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        /*
+            facebook share set up
+         */
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, shareCallBack);
 
         /*
             get the current plan item
@@ -68,6 +87,8 @@ public class MapsActivity extends ActionBarActivity{
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, new recomFragment())
                 .commit();
+
+
     }
 
     @Override
@@ -165,6 +186,46 @@ public class MapsActivity extends ActionBarActivity{
 
 
     }
+
+
+    /*
+        Methods for facebook share
+     */
+    public FacebookCallback<Sharer.Result> shareCallBack = new FacebookCallback<Sharer.Result>() {
+
+        @Override
+        public void onSuccess(Sharer.Result result) {
+            //showToast(message(R.string.title_fbShare)).show();
+        }
+        @Override
+        public void onCancel() {
+        }
+        @Override
+        public void onError(FacebookException error) {
+            //showToast(message(R.string.msgerr_shareOnFB) + " -- " + error.getMessage()).show();
+        }
+    };
+
+    public void shareToFacebook(View v){
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+
+            ShareLinkContent adShareContent = new ShareLinkContent.Builder()
+                    .setContentTitle(currentItem.getTitle())
+                    .setContentDescription(currentItem.getDescription())
+                    .build();
+
+            shareDialog.show(adShareContent);
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 
 
 
