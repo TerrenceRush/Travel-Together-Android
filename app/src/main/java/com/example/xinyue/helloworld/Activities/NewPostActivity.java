@@ -25,7 +25,10 @@ import android.widget.TextView;
 
 import com.example.xinyue.helloworld.Activities.ListActivity;
 import com.example.xinyue.helloworld.R;
+import com.example.xinyue.helloworld.util.PlanGenerator;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,12 +37,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class NewPostActivity extends Activity {
+    public static final String MY_PREFS_NAME = "tokenInfo";
+
     private EditText groupSize;
     private EditText departureDate;
     private EditText returnDate;
     private EditText addFriends;
     private ArrayList<String> friendIdList = new ArrayList<String>();
     private ArrayList<String> friendNameList = new ArrayList<String>();
+    private Date deptDate = null;
+    private Date retDate = null;
     private boolean isFriendIn[] = new boolean[friendNameList.size()];
     private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
 
@@ -204,9 +211,10 @@ public class NewPostActivity extends Activity {
         DatePickerDialog dpg = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
                 Calendar tmp = Calendar.getInstance();
                 tmp.set(year, month, day);
+                deptDate = tmp.getTime();
                 departureDate.setText(df.format(tmp.getTime()));
             }
         }, mYear, mMonth, mDay);
@@ -221,9 +229,10 @@ public class NewPostActivity extends Activity {
         DatePickerDialog dpg = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
                 Calendar tmp = Calendar.getInstance();
                 tmp.set(year, month, day);
+                retDate = tmp.getTime();
                 returnDate.setText(df.format(tmp.getTime()));
             }
         }, mYear, mMonth, mDay);
@@ -252,22 +261,21 @@ public class NewPostActivity extends Activity {
                 //Set the name in the text view...
                 int count = 0;
                 int first = -1;
-                for(int i=0; i < tmpFriendIn.length; i++){
-                    if(tmpFriendIn[i] == true){
+                for (int i = 0; i < tmpFriendIn.length; i++) {
+                    if (tmpFriendIn[i] == true) {
                         count++;
-                        if(first == -1)
+                        if (first == -1)
                             first = i;
                     }
                 }
-                if(count > 0){
+                if (count > 0) {
                     StringBuilder string = new StringBuilder();
                     string.append(friendNameList.get(first));
-                    if(count > 1){
-                        string.append(" "+"and "+Integer.toString(count-1) +" more");
+                    if (count > 1) {
+                        string.append(" " + "and " + Integer.toString(count - 1) + " more");
                     }
                     addFriends.setText(string.toString());
-                }
-                else{
+                } else {
                     addFriends.setText("Click to Add Friends");
                 }
             }
@@ -311,13 +319,33 @@ public class NewPostActivity extends Activity {
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         int selected = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton)findViewById(selected);
-        String radioText = radioButton.getText().toString();
+        int type = 1;
+        if (radioButton.getText().toString().equalsIgnoreCase("Friends"))
+            type = 2;
+        if(radioButton.getText().toString().equalsIgnoreCase("2nd degree"))
+            type = 3;
+
 
         ArrayList<String> addedFriendsId = new ArrayList<>();
         for (int i= 0; i<isFriendIn.length; i++){
             if(isFriendIn[i] == true)
                 addedFriendsId.add(friendIdList.get(i));
         }
+
+        int days = 0;
+        if(retDate != null){
+            days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
+        }
+        String text = PlanGenerator.getPlanString("none", destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
+        String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+        String query = "http://cloud6998.elasticbeanstalk.com/v1/add/:" + token + "/";
+        try {
+            query += URLEncoder.encode(text, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
 
         /**
          * proceed to post the travel use above information
