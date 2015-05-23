@@ -150,12 +150,10 @@
                 android:singleLine="false"
                 android:text="Add Members" />
 
-            <Spinner android:id="@+id/spinner"
+            <EditText android:id="@+id/add_friend"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:drawSelectorOnTop="true"
-                android:prompt="@string/spin"
-                android:entries="@array/items" />
+                android:hint="Click to Add Friends"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

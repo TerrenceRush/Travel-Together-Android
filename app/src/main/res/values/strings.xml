@@ -21,6 +21,7 @@
     <string name="spin">Spin</string>
     <string name="button_post">Post</string>
     <string name="button_cancel">Cancel</string>
+    <string name="friend_list">Friends List</string>
 
     <string name="shareToFacebook">Share To Facebook</string>
     <string name="title_activity_detail">DetailActivity</string>

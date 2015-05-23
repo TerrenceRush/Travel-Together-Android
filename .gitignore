@@ -26,3 +26,6 @@ proguard/
 # Log Files
 *.log
 
+.idea/*
+app/app.iml
+Travel-Together-Android.iml

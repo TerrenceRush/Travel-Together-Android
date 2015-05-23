@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Network;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +25,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.xinyue.helloworld.Activities.ListActivity;
+import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.util.PlanGenerator;
+
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -338,11 +342,18 @@ public class NewPostActivity extends Activity {
         }
         String text = PlanGenerator.getPlanString("none", destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
         String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
-        String query = "http://cloud6998.elasticbeanstalk.com/v1/add/:" + token + "/";
+        String query = "";
+        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
+        Log.i("query", text);
         try {
             query += URLEncoder.encode(text, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        }
+        NetworkOperation no = new NetworkOperation();
+        JSONObject res = no.addPlan(token, query);
+        if(res != null){
+
         }
 
 
