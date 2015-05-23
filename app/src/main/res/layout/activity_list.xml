@@ -10,15 +10,57 @@
 
         </FrameLayout>
 
-    <ListView
-        android:id="@+id/filter_drawer"
-        android:layout_width="match_parent"
+    <!--<ListView-->
+        <!--android:id="@+id/filter_drawer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="start"-->
+        <!--android:choiceMode="singleChoice"-->
+        <!--android:divider="@android:color/transparent"-->
+        <!--android:dividerHeight="0dp"-->
+        <!--android:background="#ffffff">-->
+        <!--</ListView>-->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="#ffffff">
-        </ListView>
+        android:background="#f5f5f5">
+
+        <EditText
+            android:id="@+id/filter_destination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Destination..." />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Maximum Group Size" />
+
+        <NumberPicker
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_group_size">
+
+            </NumberPicker>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Latest Departure Date" />
+
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_start_date">
+
+        </DatePicker>>
+
+    </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

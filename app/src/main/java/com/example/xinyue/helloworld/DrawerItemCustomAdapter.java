@@ -34,13 +34,11 @@ public class DrawerItemCustomAdapter extends ArrayAdapter<ObjectDrawerItem> {
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
         listItem = inflater.inflate(layoutResourceId, parent, false);
 
-        ImageView imageViewIcon = (ImageView) listItem.findViewById(R.id.imageViewIcon);
         TextView textViewName = (TextView) listItem.findViewById(R.id.drawer_itemName);
 
         ObjectDrawerItem folder = data[position];
 
 
-        imageViewIcon.setImageResource(folder.getIcon());
         textViewName.setText(folder.getTitle());
 
         return listItem;

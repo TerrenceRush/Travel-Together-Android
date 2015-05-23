@@ -42,6 +42,7 @@ import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.ObjectDrawerItem;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.customWidget.PullDownView;
+import com.example.xinyue.helloworld.util.Filter;
 import com.example.xinyue.helloworld.util.PlanAdapter;
 import com.example.xinyue.helloworld.util.PlanItem;
 import com.facebook.AccessToken;
@@ -67,8 +68,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     private Spinner naviSpinner;
     public static final String MY_PREFS_NAME = "tokenInfo";
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private String[] mNavigationDrawerItemTitles;
     private static ArrayList<String> friendIdList = new ArrayList<String>();
     private static ArrayList<String> friendNameList = new ArrayList<>();
     private static HashSet<String> friendSet = new HashSet<>();
@@ -83,6 +82,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         private PlanAdapter adapter;
         private String type = "all";
         private Context context;
+        private Filter currentFilter;
 
         public contentFragment(){
 
@@ -107,6 +107,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
             mPullDownView.setShowHeader();
             Bundle listTypeArgs = getArguments();
             type = listTypeArgs.getString("type");
+
 
             //set plan item click listener
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -145,6 +146,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                         //Toast.makeText(context, "Empty list", Toast.LENGTH_LONG);
                     }
                     else{
+
+
                         try {
                             JSONArray objs = response.getJSONArray("data");
                             listItems.clear();
@@ -164,6 +167,9 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                                 tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
                                 listItems.add(tmpItem);
                             }
+                            /*
+                                Deal with friend list
+                             */
                             if(type.equals("friend")){
                                 for(int i = 0;i<listItems.size();i++){
 
@@ -172,6 +178,18 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                                     if(!friendSet.contains(tmp.getHolderId()))
                                         listItems.remove(i);
 
+                                }
+                            }
+                            /*
+                                Deal with filter
+                             */
+                            if(currentFilter!=null){
+                                for(int i = 0;i<listItems.size();i++){
+
+                                    PlanItem tmp = listItems.get(i);
+
+                                    if(!currentFilter.ifMatch(tmp))
+                                        listItems.remove(i);
                                 }
                             }
                             mUIHandler.sendEmptyMessage(0);
@@ -236,18 +254,10 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.filter_drawer);
-        mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
-        ObjectDrawerItem[] drawerItem = new ObjectDrawerItem[5];
 
-        drawerItem[0] = new ObjectDrawerItem(R.drawable.ic_action_copy, mNavigationDrawerItemTitles[0]);
-        drawerItem[1] = new ObjectDrawerItem(R.drawable.ic_action_refresh, mNavigationDrawerItemTitles[1]);
-        drawerItem[2] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[2]);
-        drawerItem[3] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[3]);
-        drawerItem[4] = new ObjectDrawerItem(R.drawable.ic_action_share, mNavigationDrawerItemTitles[4]);
 
-        DrawerItemCustomAdapter drawerItemCustomAdapter = new DrawerItemCustomAdapter(this, R.layout.drawer_item, drawerItem);
-        mDrawerList.setAdapter(drawerItemCustomAdapter);
+
+
 
 
 

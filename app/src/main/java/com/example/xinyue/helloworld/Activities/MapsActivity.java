@@ -1,8 +1,10 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.Fragments.recomFragment;
@@ -40,10 +43,12 @@ public class MapsActivity extends ActionBarActivity{
     private PlanItem currentItem;
     CallbackManager callbackManager;
     private ShareDialog shareDialog;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_maps);
 
         /*
@@ -196,13 +201,14 @@ public class MapsActivity extends ActionBarActivity{
         @Override
         public void onSuccess(Sharer.Result result) {
             //showToast(message(R.string.title_fbShare)).show();
+            Toast.makeText(context, "You have successfully post on your Facebook!", Toast.LENGTH_LONG).show();
         }
         @Override
         public void onCancel() {
         }
         @Override
         public void onError(FacebookException error) {
-            //showToast(message(R.string.msgerr_shareOnFB) + " -- " + error.getMessage()).show();
+            Toast.makeText(context, "Post failed!", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -212,6 +218,7 @@ public class MapsActivity extends ActionBarActivity{
             ShareLinkContent adShareContent = new ShareLinkContent.Builder()
                     .setContentTitle(currentItem.getTitle())
                     .setContentDescription(currentItem.getDescription())
+                    .setContentUrl(Uri.parse("https://facebook.com"))
                     .build();
 
             shareDialog.show(adShareContent);
