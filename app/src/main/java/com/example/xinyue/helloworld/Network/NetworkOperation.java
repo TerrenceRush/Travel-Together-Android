@@ -118,6 +118,34 @@ public class NetworkOperation{
         return null;
     }
 
+    public JSONObject addPlan(String accessToken, String query){
+        ConnNet connNet = new ConnNet();
+        String url = "add/" + accessToken + "/" + query;
+        HttpURLConnection conn = connNet.getGetConn(url);
+        try {
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+            Log.d("RESPONSE CODE",  Integer.toString(responseCode));
+            if(responseCode == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                br.close();
+                return new JSONObject(sb.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            conn.disconnect();
+        }
+        return null;
+    }
+
 
 
 }
