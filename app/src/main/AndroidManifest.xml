@@ -60,7 +60,8 @@
         <activity
             android:name=".Activities.NewPostActivity"
             android:label="@string/title_activity_new_post"
-            android:parentActivityName=".Activities.ListActivity">
+            android:parentActivityName=".Activities.ListActivity"
+            android:theme="@style/ActionBarTheme">
 
         </activity>
 

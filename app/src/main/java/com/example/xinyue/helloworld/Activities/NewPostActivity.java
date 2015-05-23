@@ -9,9 +9,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Network;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +43,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-public class NewPostActivity extends Activity {
+public class NewPostActivity extends ActionBarActivity {
     public static final String MY_PREFS_NAME = "tokenInfo";
 
     private EditText groupSize;
@@ -74,6 +76,20 @@ public class NewPostActivity extends Activity {
         }
         isFriendIn = new boolean[friendNameList.size()];
         tmpFriendIn = new boolean[friendNameList.size()];
+
+        /*
+            Set up action bar
+         */
+        LayoutInflater inflator = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View actionBarView = inflator.inflate(R.layout.newpost_actionbar, null);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setCustomView(actionBarView);
+
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
@@ -332,8 +348,6 @@ public class NewPostActivity extends Activity {
         final EditText sizeField = (EditText) findViewById(R.id.group_size);
         String size = sizeField.getText().toString();
 
-        final CheckBox responseCheck = (CheckBox) findViewById(R.id.shareFacebook);
-        boolean share = responseCheck.isChecked();
 
         final EditText informationField = (EditText) findViewById(R.id.addtional_information);
         String information = informationField.getText().toString();
@@ -371,6 +385,7 @@ public class NewPostActivity extends Activity {
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 res = no.addPlan(token, query);
+                findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
             }
         }).start();
 
@@ -389,6 +404,13 @@ public class NewPostActivity extends Activity {
     public void onRadioButtonClicked(View view) {
         RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
         int selectedID = rg.getCheckedRadioButtonId();
+
+        if(selectedID == R.id.radio_option3){
+            findViewById(R.id.newpost_addfriend).setVisibility(View.VISIBLE);
+        }
+        else{
+            findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+        }
 
         RadioButton selectedRadioButton = (RadioButton) findViewById(selectedID);
         String privacy = selectedRadioButton.getText().toString();

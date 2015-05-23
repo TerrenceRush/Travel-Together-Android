@@ -250,13 +250,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
-
-
-
-
-
-
-
         //set up the view of action bar
         LayoutInflater inflator = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
