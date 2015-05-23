@@ -278,22 +278,22 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         naviSpinner.setAdapter(dataAdapterForNavi);
         naviSpinner.setOnItemSelectedListener(this);
 
+            Intent intent = getIntent();
+            Bundle bundle = intent.getBundleExtra("accessTokenBundle");
+            Log.i("Tag","HERE");
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("accessTokenBundle");
-        Log.i("Tag","HERE");
-
-        accessToken = bundle.getParcelable("accessToken");
+            accessToken = bundle.getParcelable("accessToken");
 
 
-        //store the access token of facebook account to sharedPreferences
-        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        Gson gsonAccessToken = new Gson();
-        String jsonAccessToken = gsonAccessToken.toJson(accessToken);
-        editor.putString("fbAccessToken", accessToken.getToken());
-        editor.commit();
+            //store the access token of facebook account to sharedPreferences
+            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+            Gson gsonAccessToken = new Gson();
+            String jsonAccessToken = gsonAccessToken.toJson(accessToken);
+            editor.putString("fbAccessToken", accessToken.getToken());
+            editor.commit();
 
-        //String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+            //String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+
 
         //            final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, friendList);
 //            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -403,6 +403,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
 
 
 

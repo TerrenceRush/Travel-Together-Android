@@ -59,7 +59,8 @@
         </activity>
         <activity
             android:name=".Activities.NewPostActivity"
-            android:label="@string/title_activity_new_post" >
+            android:label="@string/title_activity_new_post"
+            android:parentActivityName=".Activities.ListActivity">
 
         </activity>
 
@@ -72,7 +73,7 @@
 
         <activity
             android:name=".Activities.MapsActivity"
-            android:label="@string/title_activity_maps" >
+             >
         </activity>
 
     </application>
