@@ -1,12 +1,10 @@
 package com.example.xinyue.helloworld.Activities;
 
-import android.content.Context;
 import android.content.Intent;
 
 
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
@@ -52,29 +49,31 @@ import java.util.List;
 
 public class MapsActivity extends ActionBarActivity{
 
-    public static final String userToken = "CAAMzoVZAzOQEBAFDZA64Nlhv7ABS261yek3FraFZBAZBw8x01T4sMQ5B9vCuQry91ZAZBM4FUM5" +
-            "aT1nac7Y5ZCYlZA8gJZBNUxHNqe212K6N2ragQNVbcaASNEvKwTlaTJwcIxQ8VyHRjHaVMBsXwMetZ" +
-            "BZB2sRaqFdc5zdU6NxZAebc3VZAcsPqvIcxW5tp6WYm1exbls6MuNum2Li7lgBwRkUTkw4hXqONtt9IZD";
+    public static final String userToken = "CAAMzoVZAzOQEBAKLMTDiYMpZAcRhHZAatreLHcaXzHf59nqLlZBZAMJ5YvOWMFKDwtcO" +
+            "Ot5CRhfd3UPychMsZAZCsOxMjO3SlnlPh7jT9NmBLfuzZBT1WmLOXtOj1vnpIJt6roRarYJU9SbZAcZCvc6pZCCWfGeckdy" +
+            "DfG7LXfG5yCTTZCPcgkFkJeEegbbRDuDbDWxw0fgQWKQNWRzxJCCXnfkFlWV7KS53zzgZD";
+
+//    public static final String MY_PREFS_NAME = "tokenInfo";
+//    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
     // add get plan information from Xinyue
-    String planid = "8";
+
 
     // to store plan information
     ArrayList<String> joinlist;
-    HashMap<String, String> gmap = null;
+    HashMap<String, String> gmap = new HashMap<String, String>();
     JSONObject detail;
+    String planid = "3";
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private PlanItem currentItem;
     CallbackManager callbackManager;
     private ShareDialog shareDialog;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        context = this;
         setContentView(R.layout.activity_maps);
 
         /*
@@ -92,11 +91,11 @@ public class MapsActivity extends ActionBarActivity{
 
         // get detail data from backend
         getDetail();
-        try {
-            getData(detail);
-        } catch (Exception e) {
-            Log.e("detail plan", "error in parsing detail plan");
-        }
+//        try {
+//            getData(detail);
+//        } catch (Exception e) {
+//            Log.e("detail plan", "error in parsing detail plan");
+//        }
 
         String title = "find friends to SF";
         String depart_time = "July-01-2015";
@@ -106,7 +105,18 @@ public class MapsActivity extends ActionBarActivity{
         String holder = "David";
         String describtion = "Let's blow the roof off";
 
-        final String MY_PREFS_NAME = "tokenInfo";
+//        String planid = currentItem.get;
+//        String title = currentItem.getTitle();
+//        String depart_time = currentItem.getDateFrom();
+//        int length = currentItem.getDuration();
+//        int size = currentItem.getGroupSize();
+//        String participants = "";
+//        for (int i = 0; i < joinlist.size(); i++) {
+//            participants = participants + joinlist.get(i) + ",";
+//        }
+//        String holder = currentItem.getName();
+//        String describtion = currentItem.getDescription();
+
 
 //
 
@@ -144,22 +154,21 @@ public class MapsActivity extends ActionBarActivity{
         setUpMapIfNeeded();
     }
 
-    public void getData(JSONObject detail) throws JSONException{
-        HashMap<String, String> map = new HashMap<String, String>();
-        JSONObject data = detail.getJSONObject("data");
-        String joinable = data.getString("joinable");
-        String editable = data.getString("editable");
-        String joined = data.getString("joined");
-        JSONArray joined_list = data.getJSONArray("joined_list");
-        if (joined_list != null) {
-            for (int i = 0; i < joined_list.length(); i++) {
-                joinlist.add(joined_list.get(i).toString());
-            }
-        }
-        gmap.put("joinable",joinable);
-        gmap.put("editable",editable);
-        gmap.put("joined", joined);
-    }
+//    public void getData(JSONObject detail) throws JSONException{
+//        JSONObject data = detail.getJSONObject("data");
+//        String joinable = data.getString("joinable");
+//        String editable = data.getString("editable");
+//        String joined = data.getString("joined");
+//        JSONArray joined_list = data.getJSONArray("joined_list");
+//        if (joined_list != null) {
+//            for (int i = 0; i < joined_list.length(); i++) {
+//                joinlist.add(joined_list.get(i).toString());
+//            }
+//        }
+//        gmap.put("joinable",joinable);
+//        gmap.put("editable",editable);
+//        gmap.put("joined", joined);
+//    }
 
     public void getDetail() {
         // get plan information from backend
@@ -168,7 +177,37 @@ public class MapsActivity extends ActionBarActivity{
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 detail = no.getPlanList(userToken, planid);
+                Log.v("detail response", detail.toString());
+                String joinable = null;
+                String editable = null;
+                String joined = null;
+                JSONArray joined_list = null;
+                try {
+                    JSONObject data = detail.getJSONObject("data");
+                    joinable = data.getString("joinable");
+                    Log.v("joinable", joinable);
+                    editable = data.getString("editable");
+                    Log.v("editable", editable);
+                    joined = data.getString("joined");
+                    Log.v("joined", joined);
+                    joined_list = data.getJSONArray("joined_list");
+                    Log.v("joined_list", joined_list.toString());
+                } catch (Exception e) {
+                    Log.e("detail", "error in parsing detail");
+                }
 
+                if (joined_list != null) {
+                    for (int i = 0; i < joined_list.length(); i++) {
+                        try {
+                            joinlist.add(joined_list.get(i).toString());
+                        } catch (Exception e) {
+                            Log.e("joinlist", "error in join list");
+                        }
+                    }
+                }
+                gmap.put("joinable",joinable);
+                gmap.put("editable",editable);
+                gmap.put("joined", joined);
             }
         }).start();
     }
@@ -233,6 +272,15 @@ public class MapsActivity extends ActionBarActivity{
         } else if (Boolean.parseBoolean(gmap.get("joined"))) {
             menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
         }
+
+//          if (true) {
+//              menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+//              menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+//          }
+//          else {
+//              menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+//              menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+//          }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -329,14 +377,13 @@ public class MapsActivity extends ActionBarActivity{
         @Override
         public void onSuccess(Sharer.Result result) {
             //showToast(message(R.string.title_fbShare)).show();
-            Toast.makeText(context, "You have successfully post on your Facebook!", Toast.LENGTH_LONG).show();
         }
         @Override
         public void onCancel() {
         }
         @Override
         public void onError(FacebookException error) {
-            Toast.makeText(context, "Post failed!", Toast.LENGTH_LONG).show();
+            //showToast(message(R.string.msgerr_shareOnFB) + " -- " + error.getMessage()).show();
         }
     };
 
@@ -346,7 +393,6 @@ public class MapsActivity extends ActionBarActivity{
             ShareLinkContent adShareContent = new ShareLinkContent.Builder()
                     .setContentTitle(currentItem.getTitle())
                     .setContentDescription(currentItem.getDescription())
-                    .setContentUrl(Uri.parse("https://facebook.com"))
                     .build();
 
             shareDialog.show(adShareContent);
