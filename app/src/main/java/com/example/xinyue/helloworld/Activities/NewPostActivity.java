@@ -51,8 +51,11 @@ public class NewPostActivity extends Activity {
     private ArrayList<String> friendNameList = new ArrayList<String>();
     private Date deptDate = null;
     private Date retDate = null;
-    private boolean isFriendIn[] = new boolean[friendNameList.size()];
-    private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
+    private boolean isFriendIn[];
+    private boolean tmpFriendIn[];
+    private String token;
+    private String query;
+    private String res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,8 @@ public class NewPostActivity extends Activity {
             }
 
         }
+        isFriendIn = new boolean[friendNameList.size()];
+        tmpFriendIn = new boolean[friendNameList.size()];
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
@@ -215,11 +220,12 @@ public class NewPostActivity extends Activity {
         DatePickerDialog dpg = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar tmp = Calendar.getInstance();
                 tmp.set(year, month, day);
                 deptDate = tmp.getTime();
                 departureDate.setText(df.format(tmp.getTime()));
+                departureDate.clearFocus();
             }
         }, mYear, mMonth, mDay);
         dpg.show();
@@ -233,11 +239,12 @@ public class NewPostActivity extends Activity {
         DatePickerDialog dpg = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Calendar tmp = Calendar.getInstance();
                 tmp.set(year, month, day);
                 retDate = tmp.getTime();
                 returnDate.setText(df.format(tmp.getTime()));
+                returnDate.clearFocus();
             }
         }, mYear, mMonth, mDay);
         dpg.show();
@@ -245,8 +252,20 @@ public class NewPostActivity extends Activity {
 
     public void showFriendList(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("@string/friend_list");
+        builder.setTitle("Friends List");
         String[] nameList = new String[friendNameList.size()];
+        Log.i("friends number", "2");
+
+//        builder.setMultiChoiceItems(nameList, isFriendIn, new DialogInterface.OnMultiChoiceClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+//                if (isChecked && (which < 2))
+//                    tmpFriendIn[which] = true;
+//                else if (which < 2)
+//                    tmpFriendIn[which] = false;
+//            }
+//        });
+
         builder.setMultiChoiceItems(friendNameList.toArray(nameList), isFriendIn, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
@@ -282,13 +301,24 @@ public class NewPostActivity extends Activity {
                 } else {
                     addFriends.setText("Click to Add Friends");
                 }
+                addFriends.clearFocus();
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id){
+
+            }
+        });
+        builder.show();
     }
 
 
     public void moveToList(View view){
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, ListActivity.class);
+        final Bundle bundle = new Bundle();
+        intent.putExtra("accessTokenBundle", bundle);
+        intent.setAction(Intent.ACTION_VIEW);
         startActivity(intent);
     }
 
@@ -299,9 +329,6 @@ public class NewPostActivity extends Activity {
         String destination = destinationField.getText().toString();
         final String TAG = "MyActivity";
 
-        Log.d(TAG, "index=" + destination);
-
-        String test = "test";
         final EditText departureDateField = (EditText) findViewById(R.id.departure_date);
         String departureDate = departureDateField.getText().toString();
 
@@ -311,14 +338,11 @@ public class NewPostActivity extends Activity {
         final CheckBox responseCheck = (CheckBox) findViewById(R.id.shareFacebook);
         boolean share = responseCheck.isChecked();
 
-        final Spinner spinnerMem = (Spinner) findViewById(R.id.spinner);
-        String members = spinnerMem.getSelectedItem().toString();
-
         final EditText informationField = (EditText) findViewById(R.id.addtional_information);
         String information = informationField.getText().toString();
 
-        Intent intent = new Intent(context, Welcome.class);
-        startActivity(intent);
+//        Intent intent = new Intent(context, Welcome.class);
+//        startActivity(intent);
 
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
         int selected = radioGroup.getCheckedRadioButtonId();
@@ -326,7 +350,7 @@ public class NewPostActivity extends Activity {
         int type = 1;
         if (radioButton.getText().toString().equalsIgnoreCase("Friends"))
             type = 2;
-        if(radioButton.getText().toString().equalsIgnoreCase("2nd degree"))
+        if(radioButton.getText().toString().equalsIgnoreCase("Private"))
             type = 3;
 
 
@@ -341,22 +365,23 @@ public class NewPostActivity extends Activity {
             days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
         }
         String text = PlanGenerator.getPlanString("none", destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
-        String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
-        String query = "";
-        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
-        Log.i("query", text);
-        try {
-            query += URLEncoder.encode(text, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        NetworkOperation no = new NetworkOperation();
-        JSONObject res = no.addPlan(token, query);
+        token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+//        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
+        //Log.i("query", text);
+        query = text;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkOperation no = new NetworkOperation();
+                res = no.addPlan(token, query);
+            }
+        }).start();
+
         if(res != null){
-
+            Log.i("result", res);
         }
-
-
+        else
+            Log.i("result", "null");
 
         /**
          * proceed to post the travel use above information

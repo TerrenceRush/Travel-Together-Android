@@ -96,7 +96,7 @@
             <RadioButton android:id="@+id/radio_option3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/option3"
+                android:text="Private"
                 android:onClick="onRadioButtonClicked"/>
 
         </RadioGroup>
