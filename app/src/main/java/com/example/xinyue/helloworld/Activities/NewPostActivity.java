@@ -1,9 +1,11 @@
 package com.example.xinyue.helloworld.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.example.xinyue.helloworld.R;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,9 +37,11 @@ public class NewPostActivity extends Activity {
     private EditText groupSize;
     private EditText departureDate;
     private EditText returnDate;
-    private Spinner addFriends;
+    private EditText addFriends;
     private ArrayList<String> friendIdList = new ArrayList<String>();
     private ArrayList<String> friendNameList = new ArrayList<String>();
+    private boolean isFriendIn[] = new boolean[friendNameList.size()];
+    private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,14 +109,14 @@ public class NewPostActivity extends Activity {
 
     public void addListenerOnDepartDate(){
         departureDate = (EditText)findViewById(R.id.departure_date);
-        departureDate.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        departureDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
+                if (hasFocus)
                     showDepartDate(v);
             }
 
         });
-        departureDate.setOnClickListener(new View.OnClickListener(){
+        departureDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO Auto-generated method stub
@@ -123,14 +128,14 @@ public class NewPostActivity extends Activity {
 
     public void addListenerOnReturnDate(){
         returnDate = (EditText)findViewById(R.id.return_date);
-        returnDate.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        returnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
+                if (hasFocus)
                     showReturnDate(v);
             }
 
         });
-        returnDate.setOnClickListener(new View.OnClickListener(){
+        returnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO Auto-generated method stub
@@ -141,7 +146,23 @@ public class NewPostActivity extends Activity {
     }
 
     public void addListenerOnAddFriend(){
-        addFriends = (Spinner) findViewById(R.id.spinner);
+        addFriends = (EditText) findViewById(R.id.spinner);
+        addFriends.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    showFriendList();
+
+            }
+
+        });
+        addFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                showFriendList();
+
+            }
+        });
     }
 
     public void showGroupSize()
@@ -210,6 +231,50 @@ public class NewPostActivity extends Activity {
         dpg.show();
     }
 
+    public void showFriendList(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("@string/friend_list");
+        String[] nameList = new String[friendNameList.size()];
+        builder.setMultiChoiceItems(friendNameList.toArray(nameList), isFriendIn, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+                if (isChecked && (which < friendNameList.size()))
+                    tmpFriendIn[which] = true;
+                else if (which < friendNameList.size())
+                    tmpFriendIn[which] = false;
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK, so save the mSelectedItems results somewhere
+                // or return them to the component that opened the dialog
+                isFriendIn = Arrays.copyOf(tmpFriendIn, tmpFriendIn.length);
+                //Set the name in the text view...
+                int count = 0;
+                int first = -1;
+                for(int i=0; i < tmpFriendIn.length; i++){
+                    if(tmpFriendIn[i] == true){
+                        count++;
+                        if(first == -1)
+                            first = i;
+                    }
+                }
+                if(count > 0){
+                    StringBuilder string = new StringBuilder();
+                    string.append(friendNameList.get(first));
+                    if(count > 1){
+                        string.append(" "+"and "+Integer.toString(count-1) +" more");
+                    }
+                    addFriends.setText(string.toString());
+                }
+                else{
+                    addFriends.setText("Click to Add Friends");
+                }
+            }
+        });
+    }
+
 
     public void moveToList(View view){
         Intent intent = new Intent(this, MapsActivity.class);
@@ -248,6 +313,12 @@ public class NewPostActivity extends Activity {
         int selected = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton)findViewById(selected);
         String radioText = radioButton.getText().toString();
+
+        ArrayList<String> addedFriendsId = new ArrayList<>();
+        for (int i= 0; i<isFriendIn.length; i++){
+            if(isFriendIn[i] == true)
+                addedFriendsId.add(friendIdList.get(i));
+        }
 
         /**
          * proceed to post the travel use above information
