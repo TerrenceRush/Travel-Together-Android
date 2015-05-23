@@ -85,6 +85,13 @@ public class NewPostActivity extends Activity {
 
     public void addListenerOnGroupSize(){
         groupSize = (EditText)findViewById(R.id.group_size);
+        groupSize.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    showGroupSize();
+            }
+
+        });
         groupSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +104,13 @@ public class NewPostActivity extends Activity {
 
     public void addListenerOnDepartDate(){
         departureDate = (EditText)findViewById(R.id.departure_date);
+        departureDate.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    showDepartDate(v);
+            }
+
+        });
         departureDate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -109,6 +123,13 @@ public class NewPostActivity extends Activity {
 
     public void addListenerOnReturnDate(){
         returnDate = (EditText)findViewById(R.id.return_date);
+        returnDate.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    showReturnDate(v);
+            }
+
+        });
         returnDate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
