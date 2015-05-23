@@ -113,8 +113,8 @@ public class recomFragment extends Fragment {
             String type = venue.getJSONArray("categories").getJSONObject(0).getString("name");
             String distance = venue.getJSONObject("location").getString("distance");
             sb.append(String.format("%-20s", name) + "\n");
-            sb.append(String.format("%-30s", "type: "+ type));
-            sb.append(String.format("%-30s", "dis: "+ distance));
+            sb.append(String.format("%-30s", type));
+            sb.append(String.format("%-30s", "dis: "+ distance + " m"));
             recom[i] = sb.toString();
         }
         return recom;
@@ -124,12 +124,10 @@ public class recomFragment extends Fragment {
     public void generateNoteOnSD(String sFileName, String sBody){
         try
         {
-            //This will get the SD Card directory and create a folder named MyFiles in it.
             File sdCard = Environment.getExternalStorageDirectory();
             File directory = new File (sdCard.getAbsolutePath() + "/MyFiles");
             directory.mkdirs();
 
-            //Now create the file in the above directory and write the contents into it
             File file = new File(directory, sFileName);
             FileOutputStream fOut = new FileOutputStream(file);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
@@ -157,10 +155,6 @@ public class recomFragment extends Fragment {
             String recomStr = null;
 
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-                //the foursquare ID and Foursquare secret
                 final String clientID = "M5L2PT2YIELOHSMCLOTOCGHGONUNKYHL3HUPZ5REZ44DLCEB";
                 final String clientSecret = "BEJFOTI3FKXLEDSTHEDCVWPSBAUXVM4MD5QAJXQFQWOOU1SF";
 
@@ -191,9 +185,6 @@ public class recomFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line + "\n");
                 }
 
@@ -210,8 +201,6 @@ public class recomFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
                 return null;
             } finally{
                 if (urlConnection != null) {
@@ -242,7 +231,6 @@ public class recomFragment extends Fragment {
                 for(String dayForecastStr : result) {
                     placeRecom.add(dayForecastStr);
                 }
-                // New data is back from the server.  Hooray!
             }
         }
     }
