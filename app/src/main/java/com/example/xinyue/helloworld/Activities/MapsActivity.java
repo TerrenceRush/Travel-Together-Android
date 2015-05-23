@@ -1,12 +1,8 @@
 package com.example.xinyue.helloworld.Activities;
 
 import android.content.Intent;
-<<<<<<< HEAD
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-=======
->>>>>>> 836710787d3da2dce6dd23f58c1e6475078ee1ac
+
+
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -22,9 +18,7 @@ import android.widget.TextView;
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.Fragments.recomFragment;
-<<<<<<< HEAD
-import com.facebook.AccessToken;
-=======
+
 import com.example.xinyue.helloworld.util.PlanItem;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -33,7 +27,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
->>>>>>> 836710787d3da2dce6dd23f58c1e6475078ee1ac
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,12 +38,29 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends ActionBarActivity{
+
+    public static final String userToken = "CAAMzoVZAzOQEBAFDZA64Nlhv7ABS261yek3FraFZBAZBw8x01T4sMQ5B9vCuQry91ZAZBM4FUM5" +
+            "aT1nac7Y5ZCYlZA8gJZBNUxHNqe212K6N2ragQNVbcaASNEvKwTlaTJwcIxQ8VyHRjHaVMBsXwMetZ" +
+            "BZB2sRaqFdc5zdU6NxZAebc3VZAcsPqvIcxW5tp6WYm1exbls6MuNum2Li7lgBwRkUTkw4hXqONtt9IZD";
+
+    // add get plan information from Xinyue
+    String planid = "8";
+
+    // to store plan information
+    ArrayList<String> joinlist;
+    HashMap<String, String> gmap = null;
+    JSONObject detail;
+
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private PlanItem currentItem;
@@ -57,7 +68,7 @@ public class MapsActivity extends ActionBarActivity{
     private ShareDialog shareDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -74,6 +85,14 @@ public class MapsActivity extends ActionBarActivity{
          */
         currentItem = (PlanItem)getIntent().getSerializableExtra("planItem");
 
+        // get detail data from backend
+        getDetail();
+        try {
+            getData(detail);
+        } catch (Exception e) {
+            Log.e("detail plan", "error in parsing detail plan");
+        }
+
         String title = "find friends to SF";
         String depart_time = "July-01-2015";
         String length = "2";
@@ -86,7 +105,6 @@ public class MapsActivity extends ActionBarActivity{
 
 //
 
-        loadPlan();
 
 
 
@@ -121,20 +139,75 @@ public class MapsActivity extends ActionBarActivity{
         setUpMapIfNeeded();
     }
 
+    public void getData(JSONObject detail) throws JSONException{
+        HashMap<String, String> map = new HashMap<String, String>();
+        JSONObject data = detail.getJSONObject("data");
+        String joinable = data.getString("joinable");
+        String editable = data.getString("editable");
+        String joined = data.getString("joined");
+        JSONArray joined_list = data.getJSONArray("joined_list");
+        if (joined_list != null) {
+            for (int i = 0; i < joined_list.length(); i++) {
+                joinlist.add(joined_list.get(i).toString());
+            }
+        }
+        gmap.put("joinable",joinable);
+        gmap.put("editable",editable);
+        gmap.put("joined", joined);
+    }
 
-    public void loadPlan () {
+    public void getDetail() {
+        // get plan information from backend
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String usertoken = "CAAMzoVZAzOQEBAP86sD3nhN83siCE94ZAXgP8UZCOyNZC6ak67gSZBrhpT1" +
-                        "ZABq35USyq6ssTp2iI2zlPvOpK4QDMu2FiOIcT1UKtaZAV1F6OTd5ZCBZC6UeAumWtoIfgsiokRGNocYJqDYUOoodPr" +
-                        "emeRNZCOW9ZBMzNkBZA6znUTQVm0D9kVYq1rs3d6I4XX1RAKxqFxZA7PyEf9WQAOo6DzEpC" ;
-                NetworkOperation no= new NetworkOperation();
-                JSONObject allPlan = no.getPlanList(usertoken, "8");
-                Log.v("plan", allPlan.toString());
+                NetworkOperation no = new NetworkOperation();
+                detail = no.getPlanList(userToken, planid);
+
             }
         }).start();
     }
+
+    public void loadPlans() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String planid = "8";
+                NetworkOperation no = new NetworkOperation();
+                JSONObject delete = no.getPlanList(userToken, "all");
+                Log.v("plan", delete.toString());
+            }
+        }).start();
+    }
+
+
+    public void deletePlan () {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String planid = "8";
+                NetworkOperation no = new NetworkOperation();
+                JSONObject delete = no.planActions("delete", userToken, planid);
+                Log.v("plan", delete.toString());
+            }
+        }).start();
+    }
+
+    public void joinPlan(){
+        String planid = "8";
+        NetworkOperation no = new NetworkOperation();
+        JSONObject join = no.planActions("join",userToken, planid);
+        Log.v("plan", join.toString());
+    }
+
+    public void unjoinPlan() {
+        String planid = "8";
+        NetworkOperation no = new NetworkOperation();
+        JSONObject join = no.planActions("plan/unjoin",userToken, planid);
+        Log.v("plan", join.toString());
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,13 +219,13 @@ public class MapsActivity extends ActionBarActivity{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        boolean myPlan = true;
-        if (myPlan) {
+        if (Boolean.parseBoolean(gmap.get("editable"))) {
             menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
             menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
         }
-        else {
+        else if (Boolean.parseBoolean(gmap.get("joinable")) && !Boolean.parseBoolean(gmap.get("joined"))) {
             menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+        } else if (Boolean.parseBoolean(gmap.get("joined"))) {
             menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
         }
         return super.onPrepareOptionsMenu(menu);
@@ -160,24 +233,18 @@ public class MapsActivity extends ActionBarActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        String usertoken = "CAAMzoVZAzOQEBAP86sD3nhN83siCE94ZAXgP8UZCOyNZC6ak67gSZBrhpT1" +
-                "ZABq35USyq6ssTp2iI2zlPvOpK4QDMu2FiOIcT1UKtaZAV1F6OTd5ZCBZC6UeAumWtoIfgsiokRGNocYJqDYUOoodPr" +
-                "emeRNZCOW9ZBMzNkBZA6znUTQVm0D9kVYq1rs3d6I4XX1RAKxqFxZA7PyEf9WQAOo6DzEpC" ;
-        NetworkOperation no = new NetworkOperation();
+
         switch (item.getItemId()) {
             case 1:
-                JSONObject allPlan = no.getPlanList(usertoken, "8");
-                Log.v("plan", allPlan.toString());
-                break;
+                loadPlans(); break;
             case 2:
-                JSONObject delete = no.planActions("delete", usertoken, "8");
-                Log.v("plan", delete.toString()); break;
+                deletePlan();
+
+                break;
             case 3:
-                JSONObject join = no.planActions("join",usertoken, "8");
-                Log.v("plan", join.toString());  break;
+                joinPlan();  break;
             case 4:
-                JSONObject unjoin = no.planActions("plan/unjoin",usertoken, "8");
-                Log.v("plan", unjoin.toString());  break;
+                unjoinPlan();  break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -206,7 +273,7 @@ public class MapsActivity extends ActionBarActivity{
             SupportMapFragment mMapFragment = (SupportMapFragment) (getSupportFragmentManager()
                     .findFragmentById(R.id.map));
             ViewGroup.LayoutParams params = mMapFragment.getView().getLayoutParams();
-            params.height = 400;
+            params.height = 300;
             mMapFragment.getView().setLayoutParams(params);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {

@@ -47,10 +47,16 @@ public class NetworkOperation{
         return null;
     }
 
-    public JSONObject planActions(String action, String accessToken, String type) {
+    public JSONObject planActions(String action, String accessToken, String planid) {
         ConnNet connNet = new ConnNet();
-        String url = action +"/"+accessToken+"/"+type;
-        HttpURLConnection conn = connNet.getGetConn(url);
+        String url = action +"/"+accessToken+"/"+planid;
+        HttpURLConnection conn;
+        if (action.equals("delete")) {
+            conn = connNet.getDeleteConn(url);
+        }
+        else {
+            conn = connNet.getPostConn(url);
+        }
         try {
             conn.connect();
             int responseCode = conn.getResponseCode();
