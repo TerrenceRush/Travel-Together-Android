@@ -34,6 +34,7 @@ public class NewPostActivity extends Activity {
     private EditText groupSize;
     private EditText departureDate;
     private EditText returnDate;
+    private Spinner addFriends;
     private ArrayList<String> friendIdList = new ArrayList<String>();
     private ArrayList<String> friendNameList = new ArrayList<String>();
 
@@ -54,6 +55,7 @@ public class NewPostActivity extends Activity {
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
+        addListenerOnAddFriend();
 
 
     }
@@ -115,6 +117,10 @@ public class NewPostActivity extends Activity {
 
             }
         });
+    }
+
+    public void addListenerOnAddFriend(){
+        addFriends = (Spinner) findViewById(R.id.spinner);
     }
 
     public void showGroupSize()
