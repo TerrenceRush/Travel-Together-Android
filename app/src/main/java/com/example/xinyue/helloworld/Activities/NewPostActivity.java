@@ -62,7 +62,6 @@ public class NewPostActivity extends Activity {
         addListenerOnReturnDate();
         addListenerOnAddFriend();
 
-
     }
 
 
@@ -146,7 +145,7 @@ public class NewPostActivity extends Activity {
     }
 
     public void addListenerOnAddFriend(){
-        addFriends = (EditText) findViewById(R.id.spinner);
+        addFriends = (EditText) findViewById(R.id.add_friend);
         addFriends.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
