@@ -354,7 +354,7 @@ public class NewPostActivity extends Activity {
             type = 3;
 
 
-        ArrayList<String> addedFriendsId = new ArrayList<>();
+        ArrayList<String> addedFriendsId = new ArrayList<String>();
         for (int i= 0; i<isFriendIn.length; i++){
             if(isFriendIn[i] == true)
                 addedFriendsId.add(friendIdList.get(i));

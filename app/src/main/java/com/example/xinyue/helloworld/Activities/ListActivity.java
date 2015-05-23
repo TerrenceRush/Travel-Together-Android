@@ -30,13 +30,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.xinyue.helloworld.DrawerItemCustomAdapter;
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.ObjectDrawerItem;
@@ -154,6 +147,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                             for(int i=0; i<objs.length();i++){
                                 JSONObject tmp = (JSONObject) objs.get(i);
                                 PlanItem tmpItem =  new PlanItem();
+                                tmpItem.setId(tmp.getString("plan_id"));
                                 tmpItem.setTitle(tmp.getString("title"));
                                 tmpItem.setCurrentSize(tmp.getInt("count"));
                                 tmpItem.setGroupSize(tmp.getInt("limit"));
