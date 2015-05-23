@@ -26,7 +26,7 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_new_post">NewPostActivity</string>
 
-
+    <string name="button_share">Share to Facebook</string>
 
     <string-array name="navigation_drawer_items_array">
         <item>Destination</item>

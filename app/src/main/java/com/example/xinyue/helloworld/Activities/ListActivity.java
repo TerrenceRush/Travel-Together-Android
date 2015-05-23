@@ -70,8 +70,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     private ListView mDrawerList;
     private String[] mNavigationDrawerItemTitles;
     private static ArrayList<String> friendIdList = new ArrayList<String>();
-    private static ArrayList<String> friendNameList = new ArrayList<>();
-    private static HashSet<String> friendSet = new HashSet<>();
+    private static ArrayList<String> friendNameList = new ArrayList<String>();
+    private static HashSet<String> friendSet = new HashSet<String>();
 
 
     public static class contentFragment extends Fragment implements

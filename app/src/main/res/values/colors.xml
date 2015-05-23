@@ -2,4 +2,6 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="actionBarBackground">#0fddaf</color>
+    <color name="shareButton">#00FF00</color>
+
 </resources>

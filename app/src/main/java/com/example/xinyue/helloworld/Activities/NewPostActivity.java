@@ -34,8 +34,8 @@ public class NewPostActivity extends Activity {
     private EditText groupSize;
     private EditText departureDate;
     private EditText returnDate;
-    private ArrayList<String> friendIdList = new ArrayList<>();
-    private ArrayList<String> friendNameList = new ArrayList<>();
+    private ArrayList<String> friendIdList = new ArrayList<String>();
+    private ArrayList<String> friendNameList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
