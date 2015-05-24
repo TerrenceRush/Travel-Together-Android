@@ -54,9 +54,9 @@ import java.util.List;
 
 public class MapsActivity extends ActionBarActivity{
 
-    public static final String userToken = "CAAMzoVZAzOQEBAITNWFhnXrrMbSBgeDBka7PVJNRfq728ldZAsfx9zaElGQcZAprj" +
-            "S5aaLtqmetyYQsqBWUhBOB0C4lJaSSZBcceuesA0T6qZBzEeSWZC1osZCIfzEH9MpD6XHfIaZC6s6QnjqYqNqYoPJmbFfxYb" +
-            "l1VHlaOUZAmV4pyqvbdcz88ywprpL2aLVPdcrAZBUkDzGIDaEkLKpQkXeYtMnNtXGHOIZD";
+    public static final String userToken = "CAAMzoVZAzOQEBAFVhGUwazgmm9mA9o3ReX2DsH5QyX4LEeSKZAIZA5nmBuD6mbj" +
+            "YVl9RQ3hI3AuJH8jHHjmGmZBazg8LZBw2LKtEj3kld06MgggIbQvVUcZA7JZC2cQR8K68ZCKf2ZCDlQgbhZCgOPCWw2" +
+            "68PgafZBZBezmUsrAwBhPSNL0nilKWIvQRLbwlaaZCFBzFhbIMMspIZCyjEcLIrIAfUrWLbyLGmLEx0ZD";
 
 //    public static final String MY_PREFS_NAME = "tokenInfo";
 //    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
@@ -123,7 +123,7 @@ public class MapsActivity extends ActionBarActivity{
         String size = "3";
         String participants = "Jessica";
         String holder = "David";
-        String describtion = "Let's blow the roof off";
+        String description = "Let's blow the roof off";
 
 //        String planid = currentItem.get;
 //        String title = currentItem.getTitle();
@@ -139,7 +139,12 @@ public class MapsActivity extends ActionBarActivity{
           //city_name = currentItem.getDestination();
 
 
-//
+        gmap.put("title", title);
+        gmap.put("depart_time", depart_time);
+        gmap.put("length", length);
+        gmap.put("size", size);
+        gmap.put("holder", holder);
+        gmap.put("discription", description);
 
 
 
@@ -159,7 +164,7 @@ public class MapsActivity extends ActionBarActivity{
         setUpMapIfNeeded(city_name);
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
-        descriptionView.setText("Why this place is fun : " + describtion);
+        descriptionView.setText("Why this place is fun : " + description);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, new recomFragment())
@@ -281,6 +286,8 @@ public class MapsActivity extends ActionBarActivity{
 
     public void moveToEditPost() {
         Intent intent = new Intent(this, EditPost.class);
+        intent.putExtra("datamap", gmap);
+        intent.putExtra("joinlist", joinlist);
         startActivity(intent);
     }
 

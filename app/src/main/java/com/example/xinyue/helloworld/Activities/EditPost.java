@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Edward on 5/23/15.
@@ -65,6 +66,10 @@ public class EditPost extends Activity {
 //            }
 //
 //        }
+        Intent intent = getIntent();
+        HashMap<String, String> planData = (HashMap)intent.getSerializableExtra("datamap");
+        Log.v("holder", ":" + planData.get("holder"));
+
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
