@@ -70,10 +70,29 @@ public class EditPost extends Activity {
         HashMap<String, String> planData = (HashMap)intent.getSerializableExtra("datamap");
         Log.v("holder", ":" + planData.get("holder"));
 
+        EditText title = (EditText) findViewById(R.id.edit_title);
+        title.setText(planData.get("title"));
+        EditText destination = (EditText) findViewById(R.id.edit_destination);
+        destination.setText(planData.get("destination"));
+        EditText depart_date = (EditText) findViewById(R.id.edit_departure_date);
+        depart_date.setText(planData.get("depart_time"));
+        EditText return_date = (EditText) findViewById(R.id.edit_return_date);
+        return_date.setText(planData.get("return_time"));
+//        EditText return_date = (EditText) findViewById(R.id.edit_return_date);
+//        return_date.setText(planData.get(""));
+        EditText groupSize = (EditText) findViewById(R.id.edit_groupsize);
+        groupSize.setText(planData.get("size"));
+  //      RadioGroup rg = (RadioGroup) findViewById(R.id.edit_radioGroup);
+        EditText description = (EditText) findViewById(R.id.edit_addtional_information);
+        description.setText(planData.get("description"));
+
+
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
         addListenerOnAddFriend();
+
+
 
     }
 
@@ -286,8 +305,6 @@ public class EditPost extends Activity {
         final EditText sizeField = (EditText) findViewById(R.id.edit_groupsize);
         String size = sizeField.getText().toString();
 
-        final CheckBox responseCheck = (CheckBox) findViewById(R.id.edit_shareFacebook);
-        boolean share = responseCheck.isChecked();
 
         final Spinner spinnerMem = (Spinner) findViewById(R.id.spinner);
         String members = spinnerMem.getSelectedItem().toString();
