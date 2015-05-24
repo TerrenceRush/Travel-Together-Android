@@ -40,6 +40,11 @@
             android:name=".Activities.Welcome"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 
@@ -54,7 +59,10 @@
         </activity>
         <activity
             android:name=".Activities.NewPostActivity"
-            android:label="@string/title_activity_new_post" >
+            android:label="@string/title_activity_new_post"
+            android:parentActivityName=".Activities.ListActivity"
+            android:theme="@style/ActionBarTheme">
+
         </activity>
 
         <meta-data
@@ -66,27 +74,8 @@
 
         <activity
             android:name=".Activities.MapsActivity"
-            android:theme="@style/ActionBarTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+            android:theme="@style/ActionBarTheme">
         </activity>
-
-
-        <activity
-            android:name=".Activities.EditPost"
-            android:label="@string/edit_post">
-        </activity>
-
-        <activity
-            android:name=".Activities.TestActivity"
-            android:label="@string/app_name" >
-        </activity>
-
-
 
     </application>
 

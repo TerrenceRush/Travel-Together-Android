@@ -9,6 +9,7 @@ import java.util.Date;
  * Created by xinyue on 5/18/15.
  */
 public class PlanItem implements Serializable{
+    private String id;
     private String name;
     private String holderId;
     private String title;
@@ -19,6 +20,14 @@ public class PlanItem implements Serializable{
     private int currentSize;
     private String description;
     private String avatar;
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
 
     public String getName(){
         return this.name;

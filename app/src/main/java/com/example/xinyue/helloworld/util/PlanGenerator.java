@@ -1,5 +1,7 @@
 package com.example.xinyue.helloworld.util;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ public class PlanGenerator {
     }
 
     public static String getPlanString(String title, String des, String depart, String length, String descpt, String type, String limit, List<String> friends){
+        JSONObject json = new JSONObject();
         StringBuilder string = new StringBuilder("{\n");
         string.append("'title':'" + title+"',\n");
         string.append("'destination':'" + des + "',\n");
