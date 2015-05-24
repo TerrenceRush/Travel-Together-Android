@@ -17,6 +17,12 @@
     >
 
         <EditText
+            android:id="@+id/title"
+            android:hint="Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
             android:id="@+id/destination"
             android:layout_height="wrap_content"
             android:hint="@string/destination"

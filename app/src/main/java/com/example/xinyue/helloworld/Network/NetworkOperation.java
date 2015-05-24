@@ -122,7 +122,7 @@ public class NetworkOperation{
         return null;
     }
 
-    public String addPlan(String accessToken, String query){
+    public JSONObject addPlan(String accessToken, String query){
         ConnNet connNet = new ConnNet();
         OutputStream os = null;
 
@@ -149,7 +149,7 @@ public class NetworkOperation{
                 }
                 br.close();
                 Log.i("res", sb.toString());
-                return sb.toString();
+                return new JSONObject(sb.toString());
             }
         }
         catch (Exception e) {

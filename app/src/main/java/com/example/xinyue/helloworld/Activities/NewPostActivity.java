@@ -32,6 +32,7 @@ import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.util.PlanGenerator;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -58,7 +59,9 @@ public class NewPostActivity extends ActionBarActivity {
     private boolean tmpFriendIn[];
     private String token;
     private String query;
-    private String res;
+    private JSONObject res;
+    private RadioGroup radioGroup;
+    private RadioButton defaultButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,9 @@ public class NewPostActivity extends ActionBarActivity {
         }
         isFriendIn = new boolean[friendNameList.size()];
         tmpFriendIn = new boolean[friendNameList.size()];
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        defaultButton = (RadioButton) findViewById(R.id.radio_option1);
+        radioGroup.check(defaultButton.getId());
 
         /*
             Set up action bar
@@ -338,6 +344,10 @@ public class NewPostActivity extends ActionBarActivity {
 
     public void sendMessage(View view){
         final Context context = this;
+
+        final EditText titleField = (EditText)findViewById(R.id.title);
+        String title = titleField.getText().toString();
+
         final EditText destinationField = (EditText) findViewById(R.id.destination);
         String destination = destinationField.getText().toString();
         final String TAG = "MyActivity";
@@ -347,6 +357,8 @@ public class NewPostActivity extends ActionBarActivity {
 
         final EditText sizeField = (EditText) findViewById(R.id.group_size);
         String size = sizeField.getText().toString();
+        if(size.equals(""))
+            size = "2";
 
 
         final EditText informationField = (EditText) findViewById(R.id.addtional_information);
@@ -371,29 +383,52 @@ public class NewPostActivity extends ActionBarActivity {
                 addedFriendsId.add(friendIdList.get(i));
         }
 
-        int days = 0;
-        if(retDate != null){
-            days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
+        if(title.equals("") || destination.equals("") || deptDate == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please complete the form");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+                });
+            builder.show();
         }
-        String text = PlanGenerator.getPlanString("none", destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
-        token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+        else{
+            int days = 0;
+            if(retDate != null){
+                days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
+            }
+
+
+            String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+            token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 //        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
-        //Log.i("query", text);
+            Log.i("query", text);
         query = text;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 res = no.addPlan(token, query);
-                findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+                String msg = null;
+                try {
+                    msg = res.getJSONObject("err").getString("msg");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(msg != null && msg.equalsIgnoreCase("create success")){
+                    Log.i("flag", "success");
+                }
+
             }
         }).start();
-
-        if(res != null){
-            Log.i("result", res);
+            findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+            onBackPressed();
         }
-        else
-            Log.i("result", "null");
+
+
+
+
 
         /**
          * proceed to post the travel use above information
