@@ -121,7 +121,7 @@
         <EditText
             android:id="@+id/addtional_information"
             android:layout_height="wrap_content"
-            android:hint="@string/additional_information"
+            android:hint="Description"
             android:inputType="textMultiLine"
             android:layout_width="fill_parent"></EditText>
 

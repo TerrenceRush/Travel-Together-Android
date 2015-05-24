@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Network;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -26,6 +29,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xinyue.helloworld.Activities.ListActivity;
 import com.example.xinyue.helloworld.Network.NetworkOperation;
@@ -62,11 +66,13 @@ public class NewPostActivity extends ActionBarActivity {
     private JSONObject res;
     private RadioGroup radioGroup;
     private RadioButton defaultButton;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
+        context = this;
 
         if (getIntent().getExtras() != null) {
             for(String a : getIntent().getExtras().getStringArrayList("friendIdList")) {
@@ -343,7 +349,6 @@ public class NewPostActivity extends ActionBarActivity {
 
 
     public void sendMessage(View view){
-        final Context context = this;
 
         final EditText titleField = (EditText)findViewById(R.id.title);
         String title = titleField.getText().toString();
@@ -400,7 +405,7 @@ public class NewPostActivity extends ActionBarActivity {
             }
 
 
-            String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+            String text = PlanGenerator.getPlanString(title, destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
             token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 //        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
             Log.i("query", text);
@@ -418,12 +423,17 @@ public class NewPostActivity extends ActionBarActivity {
                 }
                 if(msg != null && msg.equalsIgnoreCase("create success")){
                     Log.i("flag", "success");
+                    //Toast.makeText(context, "Create Successfully!", Toast.LENGTH_LONG).show();
                 }
+                findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+                mUIHandler.sendEmptyMessage(0);
+
 
             }
         }).start();
-            findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
-            onBackPressed();
+
+
+
         }
 
 
@@ -452,6 +462,22 @@ public class NewPostActivity extends ActionBarActivity {
         String test = "test";
     }
 
+    @SuppressLint("HandlerLeak")
+    private Handler mUIHandler = new Handler() {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+
+
+        Toast.makeText(context, "Create Succesfully!", Toast.LENGTH_LONG).show();
+            onBackPressed();
+
+
+
+        }
+
+    };
 
 
 

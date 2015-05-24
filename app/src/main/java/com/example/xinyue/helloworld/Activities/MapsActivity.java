@@ -68,7 +68,7 @@ public class MapsActivity extends ActionBarActivity{
     ArrayList<String> joinlist;
     HashMap<String, String> gmap = new HashMap<String, String>();
     JSONObject detail;
-    String planid = "3";
+    String planid = "32";
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -285,8 +285,7 @@ public class MapsActivity extends ActionBarActivity{
     }
 
     public void backToList(View view) {
-        Intent intent = new Intent(this, ListActivity.class);
-        startActivity(intent);
+        onBackPressed();
     }
 
 
