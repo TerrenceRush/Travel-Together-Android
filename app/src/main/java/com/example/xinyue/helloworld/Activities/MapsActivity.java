@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,18 +52,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import imageCache.AsyncImageLoader;
+
 public class MapsActivity extends ActionBarActivity{
 
-    public static final String userToken = "CAAMzoVZAzOQEBABlhZCumJV7oNY3kSnQZCOqLzVaYkyB3vtWBKadflJlTblcD1fTsVRyVkEqSc" +
-            "ij13MbU0MobDm4wjnT6oE8J9odda3qPWZCgAivjJMUpkDk6XuSWGeCAym7aLvZC24rwxSrbd7x9VH9wXh0J" +
-            "eCZAoHFThhLZBxjl2KbSGOXnziQUTUt2K2PX524lPzRK02Yi4WkxaBA7dSKZAZACDvG050AZD";
+//    public static final String userToken = "CAAMzoVZAzOQEBABlhZCumJV7oNY3kSnQZCOqLzVaYkyB3vtWBKadflJlTblcD1fTsVRyVkEqSc" +
+//            "ij13MbU0MobDm4wjnT6oE8J9odda3qPWZCgAivjJMUpkDk6XuSWGeCAym7aLvZC24rwxSrbd7x9VH9wXh0J" +
+//            "eCZAoHFThhLZBxjl2KbSGOXnziQUTUt2K2PX524lPzRK02Yi4WkxaBA7dSKZAZACDvG050AZD";
 
-//    public static final String MY_PREFS_NAME = "tokenInfo";
-//    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+    public static final String MY_PREFS_NAME = "tokenInfo";
+    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
     // add get plan information from Xinyue
 
@@ -117,27 +125,27 @@ public class MapsActivity extends ActionBarActivity{
 //            Log.e("detail plan", "error in parsing detail plan");
 //        }
 
-        String title = "Find Friends to SF";
-        String depart_time = "July-01-2015";
-        String length = "2";
-        String size = "3";
-        String participants = "Jessica";
-        String holder = "David";
-        String description = "Let's blow the roof off";
+//        String title = "Find Friends to SF";
+//        String depart_time = "July-01-2015";
+//        String length = "2";
+//        String size = "3";
+//        String participants = "Jessica";
+//        String holder = "David";
+//        String description = "Let's blow the roof off";
 
         String return_time = "July-28-2015";
-//        String planid = currentItem.get;
-//        String title = currentItem.getTitle();
-//        String depart_time = currentItem.getDateFrom();
-//        int length = currentItem.getDuration();
-//        int size = currentItem.getGroupSize();
-//        String participants = "";
-//        for (int i = 0; i < joinlist.size(); i++) {
-//            participants = participants + joinlist.get(i) + ",";
-//        }
-//        String holder = currentItem.getName();
-//        String describtion = currentItem.getDescription();
-          //city_name = currentItem.getDestination();
+        planid = currentItem.getId();
+        String title = currentItem.getTitle();
+        String depart_time = currentItem.getDateFrom();
+        String length = Integer.toString(currentItem.getDuration());
+        String size = Integer.toString(currentItem.getGroupSize());
+        String participants = "";
+        for (int i = 0; i < joinlist.size(); i++) {
+            participants = participants + joinlist.get(i) + ",";
+        }
+        String holder = currentItem.getName();
+        String description = currentItem.getDescription();
+        city_name = currentItem.getDestination();
 
 
         gmap.put("title", title);
@@ -173,7 +181,14 @@ public class MapsActivity extends ActionBarActivity{
                 .add(R.id.container, new recomFragment())
                 .commit();
 
+        ImageView avatar = (ImageView) findViewById(R.id.detail_avatar);
 
+
+        try {
+            avatar.setImageBitmap(getImage(currentItem.getAvatar()));
+        } catch (Exception e) {
+            Log.v("image error", "image loading error");
+        }
 
     }
 
@@ -454,6 +469,11 @@ public class MapsActivity extends ActionBarActivity{
 
 
 
+    public Bitmap getImage(String url) throws IOException{
+        URL newurl = new URL(url);
+        Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+        return  mIcon_val;
+    }
 
 
 

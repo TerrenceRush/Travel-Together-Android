@@ -6,19 +6,35 @@
     android:paddingRight="16dp"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
 
-    <TextView android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/time"
-        android:layout_marginTop="10dp"
-        />
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/detail_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            app:border_width="2dp"
+            app:border_color="#000000"/>
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/time"
+            android:layout_marginTop="10dp"
+            />
 
 
-    <TextView android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/size_holder"
-        android:layout_marginTop="10dp"
-        />
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/size_holder"
+            android:layout_marginTop="10dp"
+            />
+
+    </RelativeLayout>
 
     <TextView android:layout_height="wrap_content"
         android:layout_width="wrap_content"
