@@ -163,8 +163,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                                 tmpItem.setDuration(tmp.getInt("length"));
                                 tmpItem.setDescription(tmp.getString("description"));
                                 tmpItem.setDestination(tmp.getString("destination"));
-                                //tmpItem.setAvatar(tmp.getJSONObject("holder").getString("avatar"));
-                                tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
+                                tmpItem.setAvatar(tmp.getJSONObject("holder").getString("avatar"));
+                                //tmpItem.setAvatar("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c20.0.80.80/p80x80/10463029_563489853770182_4529375127587693870_n.jpg?oh=5e4a3d5637bbe81d220f0dbbb6e5be7a&oe=5603E0AE&__gda__=1439410567_d2a73534f9278927b605d78107eab026");
                                 listItems.add(tmpItem);
                             }
                             /*

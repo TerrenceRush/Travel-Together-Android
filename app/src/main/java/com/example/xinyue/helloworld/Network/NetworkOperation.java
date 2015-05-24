@@ -92,9 +92,9 @@ public class NetworkOperation{
         String url = "auth/"+accessToken;
         HttpURLConnection conn = connNet.getPostConn(url);
         conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         OutputStream os = null;
+
 
         try {
             conn.connect();
