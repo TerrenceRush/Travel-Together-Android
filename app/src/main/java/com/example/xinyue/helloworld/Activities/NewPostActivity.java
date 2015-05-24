@@ -447,16 +447,16 @@ public class NewPostActivity extends ActionBarActivity {
 
                 if(msg != null && msg.equalsIgnoreCase("create success")){
                     Log.i("flag", "success");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Post Successfully");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User clicked OK button
-                        }
-                    });
-                    builder.show();
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setMessage("Post Successfully");
+//                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User clicked OK button
+//                        }
+//                    });
+//                    builder.show();
+                    mUIHandler.sendEmptyMessage(0);
                     findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
-                    onBackPressed();
                 }
             }
 
