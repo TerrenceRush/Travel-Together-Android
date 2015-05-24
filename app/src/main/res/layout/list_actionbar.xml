@@ -10,7 +10,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:onClick="openFilter"/>
 
 
     <Spinner

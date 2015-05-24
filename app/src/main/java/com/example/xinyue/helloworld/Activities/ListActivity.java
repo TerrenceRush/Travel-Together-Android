@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +67,8 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     private static ArrayList<String> friendIdList = new ArrayList<String>();
     private static ArrayList<String> friendNameList = new ArrayList<String>();
     private static HashSet<String> friendSet = new HashSet<String>();
+    private static Filter currentFilter = null;
+
 
 
     public static class contentFragment extends Fragment implements
@@ -75,7 +80,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         private PlanAdapter adapter;
         private String type = "all";
         private Context context;
-        private Filter currentFilter;
 
         public contentFragment(){
 
@@ -99,7 +103,9 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
             mListView.setAdapter(adapter);
             mPullDownView.setShowHeader();
             Bundle listTypeArgs = getArguments();
-            type = listTypeArgs.getString("type");
+            if(listTypeArgs!=null&&listTypeArgs.containsKey("type")){
+                type = listTypeArgs.getString("type");
+            }
 
 
             //set plan item click listener
@@ -165,25 +171,30 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                                 Deal with friend list
                              */
                             if(type.equals("friend")){
-                                for(int i = 0;i<listItems.size();i++){
-
+                                int i = 0;
+                                while(listItems.size()>i){
                                     PlanItem tmp = listItems.get(i);
-
                                     if(!friendSet.contains(tmp.getHolderId()))
                                         listItems.remove(i);
-
+                                    else{
+                                        i++;
+                                    }
                                 }
+
                             }
+
                             /*
                                 Deal with filter
                              */
                             if(currentFilter!=null){
-                                for(int i = 0;i<listItems.size();i++){
-
+                                int i = 0;
+                                while(listItems.size()>i){
                                     PlanItem tmp = listItems.get(i);
-
                                     if(!currentFilter.ifMatch(tmp))
                                         listItems.remove(i);
+                                    else{
+                                        i++;
+                                    }
                                 }
                             }
                             mUIHandler.sendEmptyMessage(0);
@@ -350,6 +361,37 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
         openNewPostActivityIntent.putStringArrayListExtra("friendIdList", friendIdList);
         openNewPostActivityIntent.putStringArrayListExtra("friendNameList", friendNameList);
         startActivity(openNewPostActivityIntent);
+    }
+
+    public void openFilter(View v){
+        mDrawerLayout.openDrawer(findViewById(R.id.drawer_view));
+    }
+
+    public void createFilter(View v){
+        EditText textView = (EditText) findViewById(R.id.filter_destination);
+        String destination = textView.getText().toString();
+        DatePicker datePicker = (DatePicker) findViewById(R.id.filter_start_date);
+        int year = datePicker.getYear();
+        int month = datePicker.getMonth() + 1;
+        int day = datePicker.getDayOfMonth();
+        mDrawerLayout.closeDrawer(findViewById(R.id.drawer_view));
+        currentFilter = new Filter(destination, year, month, day);
+        Fragment fragment = new contentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+
+    }
+
+    public void cancelFilter(View v){
+        currentFilter = null;
+        mDrawerLayout.closeDrawer(findViewById(R.id.drawer_view));
+        Fragment fragment = new contentFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
     }
 
     @Override
