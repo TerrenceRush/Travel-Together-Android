@@ -113,7 +113,6 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(context, listItems.get(position-1).getName(), Toast.LENGTH_LONG).show();
                     Intent openDetailActivityIntent = new Intent(context, MapsActivity.class);
                     openDetailActivityIntent.putExtra("planItem", listItems.get(position));
                     startActivity(openDetailActivityIntent);
