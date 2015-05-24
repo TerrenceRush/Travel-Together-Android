@@ -54,9 +54,9 @@ import java.util.List;
 
 public class MapsActivity extends ActionBarActivity{
 
-    public static final String userToken = "CAAMzoVZAzOQEBAFVhGUwazgmm9mA9o3ReX2DsH5QyX4LEeSKZAIZA5nmBuD6mbj" +
-            "YVl9RQ3hI3AuJH8jHHjmGmZBazg8LZBw2LKtEj3kld06MgggIbQvVUcZA7JZC2cQR8K68ZCKf2ZCDlQgbhZCgOPCWw2" +
-            "68PgafZBZBezmUsrAwBhPSNL0nilKWIvQRLbwlaaZCFBzFhbIMMspIZCyjEcLIrIAfUrWLbyLGmLEx0ZD";
+    public static final String userToken = "CAAMzoVZAzOQEBABlhZCumJV7oNY3kSnQZCOqLzVaYkyB3vtWBKadflJlTblcD1fTsVRyVkEqSc" +
+            "ij13MbU0MobDm4wjnT6oE8J9odda3qPWZCgAivjJMUpkDk6XuSWGeCAym7aLvZC24rwxSrbd7x9VH9wXh0J" +
+            "eCZAoHFThhLZBxjl2KbSGOXnziQUTUt2K2PX524lPzRK02Yi4WkxaBA7dSKZAZACDvG050AZD";
 
 //    public static final String MY_PREFS_NAME = "tokenInfo";
 //    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
@@ -68,7 +68,7 @@ public class MapsActivity extends ActionBarActivity{
     ArrayList<String> joinlist;
     HashMap<String, String> gmap = new HashMap<String, String>();
     JSONObject detail;
-    String planid = "32";
+    String planid = "40";
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -125,6 +125,7 @@ public class MapsActivity extends ActionBarActivity{
         String holder = "David";
         String description = "Let's blow the roof off";
 
+        String return_time = "July-28-2015";
 //        String planid = currentItem.get;
 //        String title = currentItem.getTitle();
 //        String depart_time = currentItem.getDateFrom();
@@ -144,7 +145,9 @@ public class MapsActivity extends ActionBarActivity{
         gmap.put("length", length);
         gmap.put("size", size);
         gmap.put("holder", holder);
-        gmap.put("discription", description);
+        gmap.put("description", description);
+        gmap.put("destination", city_name);
+        gmap.put("return_time", return_time);
 
 
 

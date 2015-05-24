@@ -33,6 +33,12 @@
         android:layout_below="@+id/edit_post">
 
         <EditText
+            android:id="@+id/edit_title"
+            android:hint="Title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
             android:id="@+id/edit_destination"
             android:layout_height="wrap_content"
             android:hint="@string/destination"
@@ -100,37 +106,6 @@
                     android:onClick="onRadioButtonClicked"/>
 
             </RadioGroup>
-        </LinearLayout>
-
-
-
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="left"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="3dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="Share to Facebook" />
-
-            <CheckBox
-                android:id="@+id/edit_shareFacebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:text=""
-                android:clickable="true"
-                />
-
         </LinearLayout>
 
 
