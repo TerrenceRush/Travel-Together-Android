@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,9 +54,9 @@ import java.util.List;
 
 public class MapsActivity extends ActionBarActivity{
 
-    public static final String userToken = "CAAMzoVZAzOQEBAKLMTDiYMpZAcRhHZAatreLHcaXzHf59nqLlZBZAMJ5YvOWMFKDwtcO" +
-            "Ot5CRhfd3UPychMsZAZCsOxMjO3SlnlPh7jT9NmBLfuzZBT1WmLOXtOj1vnpIJt6roRarYJU9SbZAcZCvc6pZCCWfGeckdy" +
-            "DfG7LXfG5yCTTZCPcgkFkJeEegbbRDuDbDWxw0fgQWKQNWRzxJCCXnfkFlWV7KS53zzgZD";
+    public static final String userToken = "CAAMzoVZAzOQEBAITNWFhnXrrMbSBgeDBka7PVJNRfq728ldZAsfx9zaElGQcZAprj" +
+            "S5aaLtqmetyYQsqBWUhBOB0C4lJaSSZBcceuesA0T6qZBzEeSWZC1osZCIfzEH9MpD6XHfIaZC6s6QnjqYqNqYoPJmbFfxYb" +
+            "l1VHlaOUZAmV4pyqvbdcz88ywprpL2aLVPdcrAZBUkDzGIDaEkLKpQkXeYtMnNtXGHOIZD";
 
 //    public static final String MY_PREFS_NAME = "tokenInfo";
 //    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
@@ -147,10 +148,10 @@ public class MapsActivity extends ActionBarActivity{
         titleView.setText(title);
 
         TextView time = (TextView) findViewById(R.id.time);
-        time.setText("on " + depart_time + " for " + length +" days");
+        time.setText(Html.fromHtml("on <b><font color=\"blue\">" + depart_time + "</style></b> for <b><font color=\"blue\">" + length+ "</font></b> days"));
 
         TextView sizeHolderView = (TextView) findViewById(R.id.size_holder);
-        sizeHolderView.setText("Group Size : " + size + "              Created by " + holder);
+        sizeHolderView.setText(Html.fromHtml("Group Size : <b><font color=\"red\">" + size + "</font></b>") + "               Created by " + Html.fromHtml("<b><font color=\"red\">" + holder+ "</font></b>"));
 
         TextView participantView = (TextView) findViewById(R.id.participants);
         participantView.setText(participants + " has joined");
@@ -249,7 +250,6 @@ public class MapsActivity extends ActionBarActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String planid = "8";
                 NetworkOperation no = new NetworkOperation();
                 JSONObject delete = no.planActions("delete", userToken, planid);
                 Log.v("plan", delete.toString());
@@ -258,17 +258,25 @@ public class MapsActivity extends ActionBarActivity{
     }
 
     public void joinPlan(){
-        String planid = "8";
-        NetworkOperation no = new NetworkOperation();
-        JSONObject join = no.planActions("join",userToken, planid);
-        Log.v("plan", join.toString());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkOperation no = new NetworkOperation();
+                JSONObject join = no.planActions("join",userToken, planid);
+                Log.v("plan", join.toString());
+            }
+        }).start();
     }
 
     public void unjoinPlan() {
-        String planid = "8";
-        NetworkOperation no = new NetworkOperation();
-        JSONObject join = no.planActions("plan/unjoin",userToken, planid);
-        Log.v("plan", join.toString());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                NetworkOperation no = new NetworkOperation();
+                JSONObject join = no.planActions("plan/unjoin",userToken, planid);
+                Log.v("plan", join.toString());
+            }
+        }).start();
     }
 
     public void moveToEditPost() {
@@ -294,24 +302,24 @@ public class MapsActivity extends ActionBarActivity{
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-//        if (Boolean.parseBoolean(gmap.get("editable"))) {
-//            menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
-//            menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
-//        }
-//        else if (Boolean.parseBoolean(gmap.get("joinable")) && !Boolean.parseBoolean(gmap.get("joined"))) {
-//            menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
-//        } else if (Boolean.parseBoolean(gmap.get("joined"))) {
-//            menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
-//        }
+        if (Boolean.parseBoolean(gmap.get("editable"))) {
+            menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+            menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+        }
+        else if (Boolean.parseBoolean(gmap.get("joinable")) && !Boolean.parseBoolean(gmap.get("joined"))) {
+            menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+        } else if (Boolean.parseBoolean(gmap.get("joined"))) {
+            menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+        }
 
-          if (true) {
-              menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
-              menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
-          }
-          else {
-              menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
-              menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
-          }
+//          if (true) {
+//              menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+//              menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+//          }
+//          else {
+//              menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+//              menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+//          }
         return super.onPrepareOptionsMenu(menu);
     }
 

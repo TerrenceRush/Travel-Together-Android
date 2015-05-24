@@ -324,10 +324,10 @@ public class EditPost extends Activity {
             e.printStackTrace();
         }
         NetworkOperation no = new NetworkOperation();
-        JSONObject res = no.addPlan(token, query);
-        if(res != null){
-
-        }
+       // JSONObject res = no.addPlan(token, query);
+//        if(res != null){
+//
+//        }
 
         // need to send the message
     }

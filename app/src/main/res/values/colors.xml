@@ -2,6 +2,6 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="actionBarBackground">#0fddaf</color>
-    <color name="planTitle">#d35400</color>
+    <color name="planTitle">#000000</color>
 
 </resources>
