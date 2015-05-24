@@ -37,6 +37,8 @@ import com.facebook.login.LoginManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,10 +190,13 @@ public class Welcome extends Activity {
                         new Thread(new Runnable() {
                             public void run() {
                                 NetworkOperation networkOperation = new NetworkOperation();
-                                Map<String, String> params = new HashMap<String, String>();
-                                params.put("avatar", user_avatar.toString());
-                                JSONObject requestData = new JSONObject(params);
-                                JSONObject response = networkOperation.authenticate(loginResult.getAccessToken().getToken(), requestData.toString());
+                                String params = "";
+                                try {
+                                    params = URLEncoder.encode("avatar", "UTF-8")+"="+ URLEncoder.encode(user_avatar.toString(), "UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                                JSONObject response = networkOperation.authenticate(loginResult.getAccessToken().getToken(), params);
                                 try {
                                     JSONObject data = response.getJSONObject("data");
                                     String name = data.getString("name");

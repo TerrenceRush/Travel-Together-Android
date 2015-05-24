@@ -405,7 +405,12 @@ public class NewPostActivity extends ActionBarActivity {
             }
 
 
+
             String text = PlanGenerator.getPlanString(title, destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
+
+            //String text = "aa";
+            //String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+
             token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 //        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
             Log.i("query", text);
