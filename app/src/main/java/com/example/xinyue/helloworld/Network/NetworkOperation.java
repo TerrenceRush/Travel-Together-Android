@@ -128,14 +128,15 @@ public class NetworkOperation{
 
         try{
             HttpURLConnection connection = connNet.getPostConn("add/"+accessToken);
-            Log.i("url", query);
+            //Log.i("url", query);
             connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.connect();
+            connection.setDoOutput(true);
+            connection.setUseCaches(false);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             os = connection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
             writer.write(query);
+            writer.flush();
             writer.close();
             os.close();
             int responseCode = connection.getResponseCode();

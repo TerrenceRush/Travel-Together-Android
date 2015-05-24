@@ -227,12 +227,14 @@ public class NewPostActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 groupSize.setText(String.valueOf(np.getValue())); //set the value to textview
+                groupSize.clearFocus();
                 d.dismiss();
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                groupSize.clearFocus();
                 d.dismiss(); // dismiss the dialog
             }
         });
@@ -395,7 +397,7 @@ public class NewPostActivity extends ActionBarActivity {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked OK button
                 }
-                });
+            });
             builder.show();
         }
         else{
@@ -404,42 +406,62 @@ public class NewPostActivity extends ActionBarActivity {
                 days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
             }
 
+            if(days < 0){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Return date must not be earlier than departure date");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                    }
+                });
+                builder.show();
+            }
+            else{
+                String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+                //List<NameValuePair> params = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+                token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
+//              Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
+                query = text;
+                Log.i("query", query);
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetworkOperation no = new NetworkOperation();
+                        res = no.addPlan(token, query);
 
+                    }
+                });
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            String text = PlanGenerator.getPlanString(title, destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
-
-            //String text = "aa";
-            //String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
-
-            token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
-//        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
-            Log.i("query", text);
-        query = text;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                NetworkOperation no = new NetworkOperation();
-                res = no.addPlan(token, query);
                 String msg = null;
                 try {
                     msg = res.getJSONObject("err").getString("msg");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 if(msg != null && msg.equalsIgnoreCase("create success")){
                     Log.i("flag", "success");
-                    //Toast.makeText(context, "Create Successfully!", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Post Successfully");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                        }
+                    });
+                    builder.show();
+                    findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+                    onBackPressed();
                 }
-                findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
-                mUIHandler.sendEmptyMessage(0);
-
-
             }
-        }).start();
-
-
 
         }
+
 
 
 

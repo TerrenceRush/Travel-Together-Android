@@ -318,7 +318,7 @@ public class EditPost extends Activity {
         if(retDate != null){
             days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
         }
-        String text = PlanGenerator.getPlanString("none", destination, departureDate, Integer.toString(days), information, Integer.toString(type), size, addedFriendsId);
+        String text = PlanGenerator.getPlanString("none", destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
         String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
         String query = "";
         Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
