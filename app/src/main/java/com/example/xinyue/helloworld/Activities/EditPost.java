@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,11 +21,13 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.util.PlanGenerator;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -51,11 +56,14 @@ public class EditPost extends Activity {
     private Date retDate = null;
     private boolean isFriendIn[] = new boolean[friendNameList.size()];
     private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
+    private Context context;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_post);
+        context = this;
 
 //        if (getIntent().getExtras() != null) {
 //            for(String a : getIntent().getExtras().getStringArrayList("friendIdList")) {
@@ -291,29 +299,27 @@ public class EditPost extends Activity {
 
 
     public void sendMessage(View view){
-        final Context context = this;
+        final EditText titleField = (EditText)findViewById(R.id.edit_title);
+        String title = titleField.getText().toString();
+
         final EditText destinationField = (EditText) findViewById(R.id.edit_destination);
         String destination = destinationField.getText().toString();
         final String TAG = "MyActivity";
 
-        Log.d(TAG, "index=" + destination);
-
-        String test = "test";
         final EditText departureDateField = (EditText) findViewById(R.id.edit_departure_date);
         String departureDate = departureDateField.getText().toString();
 
         final EditText sizeField = (EditText) findViewById(R.id.edit_groupsize);
         String size = sizeField.getText().toString();
+        if(size.equals(""))
+            size = "2";
 
-
-        final Spinner spinnerMem = (Spinner) findViewById(R.id.spinner);
-        String members = spinnerMem.getSelectedItem().toString();
 
         final EditText informationField = (EditText) findViewById(R.id.edit_addtional_information);
         String information = informationField.getText().toString();
 
-        Intent intent = new Intent(context, Welcome.class);
-        startActivity(intent);
+//        Intent intent = new Intent(context, Welcome.class);
+//        startActivity(intent);
 
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.edit_radioGroup);
         int selected = radioGroup.getCheckedRadioButtonId();
@@ -321,7 +327,7 @@ public class EditPost extends Activity {
         int type = 1;
         if (radioButton.getText().toString().equalsIgnoreCase("Friends"))
             type = 2;
-        if(radioButton.getText().toString().equalsIgnoreCase("2nd degree"))
+        if(radioButton.getText().toString().equalsIgnoreCase("Private"))
             type = 3;
 
 
@@ -331,27 +337,75 @@ public class EditPost extends Activity {
                 addedFriendsId.add(friendIdList.get(i));
         }
 
-        int days = 0;
-        if(retDate != null){
-            days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
+        if(title.equals("") || destination.equals("") || deptDate == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Please complete the form");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            builder.show();
         }
-        String text = PlanGenerator.getPlanString("none", destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
-        String token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
-        String query = "";
-        Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
-        Log.i("query", text);
-        try {
-            query += URLEncoder.encode(text, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        NetworkOperation no = new NetworkOperation();
-       // JSONObject res = no.addPlan(token, query);
-//        if(res != null){
-//
-//        }
+        else {
+            int days = 0;
+            if (retDate != null) {
+                days = (int) (retDate.getTime() - deptDate.getTime()) / (24 * 60 * 60 * 1000);
+            }
 
-        // need to send the message
+            if (days < 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Return date must not be earlier than departure date");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                    }
+                });
+                builder.show();
+            } else {
+                String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+                //List<NameValuePair> params = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+                token = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).getString("fbAccessToken", "");
+//              Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
+                query = text;
+                Log.i("query", query);
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetworkOperation no = new NetworkOperation();
+                        res = no.addPlan(token, query);
+
+                    }
+                });
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                String msg = null;
+                try {
+                    msg = res.getJSONObject("err").getString("msg");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (msg != null && msg.equalsIgnoreCase("create success")) {
+                    Log.i("flag", "success");
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setMessage("Post Successfully");
+//                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            // User clicked OK button
+//                        }
+//                    });
+//                    builder.show();
+                    mUIHandler.sendEmptyMessage(0);
+                    findViewById(R.id.newpost_addfriend).setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
 
@@ -364,4 +418,21 @@ public class EditPost extends Activity {
         String test = "test";
     }
 
+
+    @SuppressLint("HandlerLeak")
+    private Handler mUIHandler = new Handler() {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+
+
+            Toast.makeText(context, "Create Succesfully!", Toast.LENGTH_LONG).show();
+            onBackPressed();
+
+
+
+        }
+
+    };
 }
