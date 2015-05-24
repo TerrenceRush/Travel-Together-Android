@@ -7,12 +7,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Network;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,9 +18,7 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.example.xinyue.helloworld.Activities.ListActivity;
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
 import com.example.xinyue.helloworld.util.PlanGenerator;
@@ -40,7 +34,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-public class NewPostActivity extends Activity {
+/**
+ * Created by Edward on 5/23/15.
+ */
+public class EditPost extends Activity {
     public static final String MY_PREFS_NAME = "tokenInfo";
 
     private EditText groupSize;
@@ -57,17 +54,17 @@ public class NewPostActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post);
+        setContentView(R.layout.edit_post);
 
-        if (getIntent().getExtras() != null) {
-            for(String a : getIntent().getExtras().getStringArrayList("friendIdList")) {
-                friendIdList.add(a);
-            }
-            for(String a : getIntent().getExtras().getStringArrayList("friendNameList")) {
-                friendNameList.add(a);
-            }
-
-        }
+//        if (getIntent().getExtras() != null) {
+//            for(String a : getIntent().getExtras().getStringArrayList("friendIdList")) {
+//                friendIdList.add(a);
+//            }
+//            for(String a : getIntent().getExtras().getStringArrayList("friendNameList")) {
+//                friendNameList.add(a);
+//            }
+//
+//        }
         addListenerOnGroupSize();
         addListenerOnDepartDate();
         addListenerOnReturnDate();
@@ -75,31 +72,8 @@ public class NewPostActivity extends Activity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_new_post, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void addListenerOnGroupSize(){
-        groupSize = (EditText)findViewById(R.id.group_size);
+        groupSize = (EditText)findViewById(R.id.edit_groupsize);
         groupSize.setOnFocusChangeListener(new View.OnFocusChangeListener(){
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus)
@@ -117,68 +91,11 @@ public class NewPostActivity extends Activity {
         });
     }
 
-    public void addListenerOnDepartDate(){
-        departureDate = (EditText)findViewById(R.id.departure_date);
-        departureDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    showDepartDate(v);
-            }
-
-        });
-        departureDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO Auto-generated method stub
-                showDepartDate(view);
-
-            }
-        });
-    }
-
-    public void addListenerOnReturnDate(){
-        returnDate = (EditText)findViewById(R.id.return_date);
-        returnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    showReturnDate(v);
-            }
-
-        });
-        returnDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO Auto-generated method stub
-                showReturnDate(view);
-
-            }
-        });
-    }
-
-    public void addListenerOnAddFriend(){
-        addFriends = (EditText) findViewById(R.id.add_friend);
-        addFriends.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                    showFriendList();
-
-            }
-
-        });
-        addFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO Auto-generated method stub
-                showFriendList();
-
-            }
-        });
-    }
 
     public void showGroupSize()
     {
 
-        final Dialog d = new Dialog(NewPostActivity.this);
+        final Dialog d = new Dialog(EditPost.this);
         d.setTitle("NumberPicker");
         d.setContentView(R.layout.group_size_dialog);
         Button b1 = (Button) d.findViewById(R.id.button1);
@@ -203,9 +120,66 @@ public class NewPostActivity extends Activity {
             }
         });
         d.show();
-
-
     }
+
+    public void addListenerOnAddFriend(){
+        addFriends = (EditText) findViewById(R.id.edit_add_friend);
+        addFriends.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    showFriendList();
+
+            }
+
+        });
+        addFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                showFriendList();
+
+            }
+        });
+    }
+
+    public void addListenerOnDepartDate(){
+        departureDate = (EditText)findViewById(R.id.edit_departure_date);
+        departureDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    showDepartDate(v);
+            }
+
+        });
+        departureDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                showDepartDate(view);
+
+            }
+        });
+    }
+
+    public void addListenerOnReturnDate(){
+        returnDate = (EditText)findViewById(R.id.edit_return_date);
+        returnDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    showReturnDate(v);
+            }
+
+        });
+        returnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                showReturnDate(view);
+
+            }
+        });
+    }
+
 
     public void showDepartDate(View view){
         final Calendar c = Calendar.getInstance();
@@ -286,7 +260,6 @@ public class NewPostActivity extends Activity {
         });
     }
 
-
     public void moveToList(View view){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
@@ -295,32 +268,32 @@ public class NewPostActivity extends Activity {
 
     public void sendMessage(View view){
         final Context context = this;
-        final EditText destinationField = (EditText) findViewById(R.id.destination);
+        final EditText destinationField = (EditText) findViewById(R.id.edit_destination);
         String destination = destinationField.getText().toString();
         final String TAG = "MyActivity";
 
         Log.d(TAG, "index=" + destination);
 
         String test = "test";
-        final EditText departureDateField = (EditText) findViewById(R.id.departure_date);
+        final EditText departureDateField = (EditText) findViewById(R.id.edit_departure_date);
         String departureDate = departureDateField.getText().toString();
 
-        final EditText sizeField = (EditText) findViewById(R.id.group_size);
+        final EditText sizeField = (EditText) findViewById(R.id.edit_groupsize);
         String size = sizeField.getText().toString();
 
-        final CheckBox responseCheck = (CheckBox) findViewById(R.id.shareFacebook);
+        final CheckBox responseCheck = (CheckBox) findViewById(R.id.edit_shareFacebook);
         boolean share = responseCheck.isChecked();
 
         final Spinner spinnerMem = (Spinner) findViewById(R.id.spinner);
         String members = spinnerMem.getSelectedItem().toString();
 
-        final EditText informationField = (EditText) findViewById(R.id.addtional_information);
+        final EditText informationField = (EditText) findViewById(R.id.edit_addtional_information);
         String information = informationField.getText().toString();
 
         Intent intent = new Intent(context, Welcome.class);
         startActivity(intent);
 
-        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.edit_radioGroup);
         int selected = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton)findViewById(selected);
         int type = 1;
@@ -356,24 +329,17 @@ public class NewPostActivity extends Activity {
 
         }
 
-
-
-        /**
-         * proceed to post the travel use above information
-         */
+        // need to send the message
     }
 
 
     public void onRadioButtonClicked(View view) {
-        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioGroup rg = (RadioGroup) findViewById(R.id.edit_radioGroup);
         int selectedID = rg.getCheckedRadioButtonId();
 
         RadioButton selectedRadioButton = (RadioButton) findViewById(selectedID);
         String privacy = selectedRadioButton.getText().toString();
         String test = "test";
     }
-
-
-
 
 }

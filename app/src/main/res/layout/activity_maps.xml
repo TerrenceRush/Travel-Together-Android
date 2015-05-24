@@ -6,37 +6,24 @@
     android:paddingRight="16dp"
     android:orientation="vertical" >
 
-    <TextView android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/title"
-        android:textStyle ="bold"
-        android:textColor="@color/shareButton"
-        />
-
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_share"
-        android:id="@+id/share"
-        android:onClick="shareToFacebook"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/shareButton"/>
-
 
     <TextView android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/time"
+        android:layout_marginTop="10dp"
         />
 
 
     <TextView android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/size_holder"
+        android:layout_marginTop="10dp"
         />
 
     <TextView android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:id="@+id/participants"
+        android:layout_marginTop="10dp"
         />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,6 +35,7 @@
     <TextView android:layout_height="wrap_content"
               android:layout_width="wrap_content"
               android:id="@+id/description"
+              android:layout_marginTop="10dp"
               />
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

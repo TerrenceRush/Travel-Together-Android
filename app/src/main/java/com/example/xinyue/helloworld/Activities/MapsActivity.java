@@ -1,18 +1,22 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 
 
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.xinyue.helloworld.Network.NetworkOperation;
@@ -71,10 +75,25 @@ public class MapsActivity extends ActionBarActivity{
     CallbackManager callbackManager;
     private ShareDialog shareDialog;
 
+    private String city_name = "New York";
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+
+
+        //set up the view of action bar
+        LayoutInflater inflator = (LayoutInflater) this
+        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View actionBarView = inflator.inflate(R.layout.map_actionbar, null);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setCustomView(actionBarView);
 
         /*
             facebook share set up
@@ -97,7 +116,7 @@ public class MapsActivity extends ActionBarActivity{
 //            Log.e("detail plan", "error in parsing detail plan");
 //        }
 
-        String title = "find friends to SF";
+        String title = "Find Friends to SF";
         String depart_time = "July-01-2015";
         String length = "2";
         String size = "3";
@@ -116,6 +135,7 @@ public class MapsActivity extends ActionBarActivity{
 //        }
 //        String holder = currentItem.getName();
 //        String describtion = currentItem.getDescription();
+          //city_name = currentItem.getDestination();
 
 
 //
@@ -135,7 +155,7 @@ public class MapsActivity extends ActionBarActivity{
         TextView participantView = (TextView) findViewById(R.id.participants);
         participantView.setText(participants + " has joined");
 
-        setUpMapIfNeeded();
+        setUpMapIfNeeded(city_name);
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
         descriptionView.setText("Why this place is fun : " + describtion);
@@ -151,7 +171,7 @@ public class MapsActivity extends ActionBarActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        setUpMapIfNeeded(city_name);
     }
 
 //    public void getData(JSONObject detail) throws JSONException{
@@ -251,36 +271,47 @@ public class MapsActivity extends ActionBarActivity{
         Log.v("plan", join.toString());
     }
 
+    public void moveToEditPost() {
+        Intent intent = new Intent(this, EditPost.class);
+        startActivity(intent);
+    }
+
+    public void backToList(View view) {
+        Intent intent = new Intent(this, ListActivity.class);
+        startActivity(intent);
+    }
+
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_detail, menu);
+        inflater.inflate(R.menu.map_menu, menu);
         return true;
+
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if (Boolean.parseBoolean(gmap.get("editable"))) {
-            menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
-            menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
-        }
-        else if (Boolean.parseBoolean(gmap.get("joinable")) && !Boolean.parseBoolean(gmap.get("joined"))) {
-            menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
-        } else if (Boolean.parseBoolean(gmap.get("joined"))) {
-            menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
-        }
+//        if (Boolean.parseBoolean(gmap.get("editable"))) {
+//            menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+//            menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+//        }
+//        else if (Boolean.parseBoolean(gmap.get("joinable")) && !Boolean.parseBoolean(gmap.get("joined"))) {
+//            menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+//        } else if (Boolean.parseBoolean(gmap.get("joined"))) {
+//            menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+//        }
 
-//          if (true) {
-//              menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
-//              menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
-//          }
-//          else {
-//              menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
-//              menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
-//          }
+          if (true) {
+              menu.add(menu.NONE, 1, menu.NONE, "Edit Plan");
+              menu.add(menu.NONE, 2, menu.NONE, "Delete Plan");
+          }
+          else {
+              menu.add(menu.NONE, 3, menu.NONE, "Join Plan");
+              menu.add(menu.NONE, 4, menu.NONE, "Disjoin Plan");
+          }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -289,7 +320,7 @@ public class MapsActivity extends ActionBarActivity{
 
         switch (item.getItemId()) {
             case 1:
-                loadPlans(); break;
+                moveToEditPost(); break;
             case 2:
                 deletePlan();
 
@@ -305,7 +336,7 @@ public class MapsActivity extends ActionBarActivity{
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * call {@link #setUpMap(String city_name)} once when {@link #mMap} is not null.
      * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
@@ -317,7 +348,7 @@ public class MapsActivity extends ActionBarActivity{
      * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
      * method in {@link #onResume()} to guarantee that it will be called.
      */
-    private void setUpMapIfNeeded() {
+    private void setUpMapIfNeeded(String city_name) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -330,19 +361,17 @@ public class MapsActivity extends ActionBarActivity{
             mMapFragment.getView().setLayoutParams(params);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+                setUpMap(city_name);
             }
         }
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {
-        String city_name = "new york";
+    private void setUpMap(String city_name) {
         LatLng ll = null;
         if (Geocoder.isPresent()) {
             try {
