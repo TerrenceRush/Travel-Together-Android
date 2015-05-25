@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,7 +75,7 @@ public static final String MY_PREFS_NAME = "tokenInfo";
 
 
     // to store plan information
-    ArrayList<String> joinlist;
+    ArrayList<String> joinlist = new ArrayList<String>();
     HashMap<String, String> gmap = new HashMap<String, String>();
     JSONObject detail;
     String planid = "40";
@@ -141,15 +142,11 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         String return_time = "July-28-2015";
         planid = currentItem.getId();
         String title = currentItem.getTitle();
-        String depart_time = currentItem.getDateFrom();
+        String depart_temp = currentItem.getDateFrom();
+        String[] depart = depart_temp.split(" ");
+        String depart_time = depart[0];
         String length = Integer.toString(currentItem.getDuration());
         String size = Integer.toString(currentItem.getGroupSize());
-        String participants = "";
-        if (joinlist != null) {
-            for (int i = 0; i < joinlist.size(); i++) {
-                participants = participants + joinlist.get(i) + ",";
-            }
-        }
         String holder = currentItem.getName();
         String description = currentItem.getDescription();
         city_name.set(0, currentItem.getDestination());
@@ -176,8 +173,7 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         TextView sizeHolderView = (TextView) findViewById(R.id.size_holder);
         sizeHolderView.setText(Html.fromHtml("Group Size : <b><font color=\"red\">" + size + "</font></b>") + "               Created by " + Html.fromHtml("<b><font color=\"red\">" + holder+ "</font></b>"));
 
-        TextView participantView = (TextView) findViewById(R.id.participants);
-        participantView.setText(participants + " has joined");
+
 
         setUpMapIfNeeded(city_name.get(0));
 
@@ -272,12 +268,24 @@ public static final String MY_PREFS_NAME = "tokenInfo";
                 if (joined_list != null) {
                     for (int i = 0; i < joined_list.length(); i++) {
                         try {
-                            joinlist.add(joined_list.get(i).toString());
+
+                            JSONObject friend = joined_list.getJSONObject(i);
+                            String name = friend.getString("name");
+                            joinlist.add(name);
+                            Log.v("name", name);
                         } catch (Exception e) {
                             Log.e("joinlist", "error in join list");
                         }
                     }
                 }
+                String participants = "";
+                if (joinlist != null) {
+                    for (int i = 0; i < joinlist.size(); i++) {
+                        participants = participants + joinlist.get(i) + " ";
+                    }
+                }
+                TextView participantView = (TextView) findViewById(R.id.participants);
+                participantView.setText(participants + " has joined");
                 gmap.put("joinable",joinable);
                 gmap.put("editable",editable);
                 gmap.put("joined", joined);

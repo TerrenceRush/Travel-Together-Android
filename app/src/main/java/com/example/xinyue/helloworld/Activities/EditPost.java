@@ -54,8 +54,6 @@ public class EditPost extends Activity {
     private ArrayList<String> friendNameList = new ArrayList<String>();
     private Date deptDate = null;
     private Date retDate = null;
-    private String query;
-    private JSONObject res;
     private boolean isFriendIn[] = new boolean[friendNameList.size()];
     private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
     private Context context;
