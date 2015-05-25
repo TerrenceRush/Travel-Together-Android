@@ -58,6 +58,9 @@ public class EditPost extends Activity {
     private boolean tmpFriendIn[] = new boolean[friendNameList.size()];
     private Context context;
     private String token;
+    private String query;
+    private JSONObject res;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.xinyue.helloworld.R;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,8 @@ import java.util.zip.Inflater;
  * A placeholder fragment containing a simple view.
  */
 public class recomFragment extends Fragment {
+
+    ArrayList<String> location = new ArrayList<String>(Arrays.asList("40.7463956, -73.9852992"));
 
     ArrayAdapter<String> placeRecom;
     public recomFragment() {
@@ -91,8 +94,13 @@ public class recomFragment extends Fragment {
         ListView listview = (ListView) rootView.findViewById(R.id.listview_recom);
         listview.setAdapter(placeRecom);
 
+        String loc = getArguments().getString("location");
+        location.set(0,loc);
+//        String[] latlong =  location.split(",");
+//        double latitude = Double.parseDouble(latlong[0]);
+//        double longitude = Double.parseDouble(latlong[1]);
         GetRecommendation fetchPlace = new GetRecommendation();
-        fetchPlace.execute();
+        fetchPlace.execute(location.get(0));
 
         return rootView;
     }
@@ -105,13 +113,23 @@ public class recomFragment extends Fragment {
         Log.d("String size", "size"+result.length());
         JSONObject response = obj.getJSONObject("response");
         JSONArray venues = response.getJSONArray("venues");
-        String[] recom = new String[10];
-        for (int i = 0; i < 10; i++) {
+        int len = 10;
+        if (venues.length() < 10) {
+            len = venues.length();
+        }
+        String[] recom = new String[len];
+        for (int i = 0; i < len; i++) {
             StringBuilder sb = new StringBuilder();
             JSONObject venue = venues.getJSONObject(i);
             String name = venue.getString("name");
-            String type = venue.getJSONArray("categories").getJSONObject(0).getString("name");
-            String distance = venue.getJSONObject("location").getString("distance");
+            String type = "no categories";
+            if (venue.getJSONArray("categories").length() != 0) {
+                type = venue.getJSONArray("categories").getJSONObject(0).getString("name");
+            }
+            String distance = "unknown";
+            if (venue.getJSONObject("location").getString("distance")!=null) {
+                distance = venue.getJSONObject("location").getString("distance");
+            }
             sb.append(String.format("%-20s", name) + "\n");
             sb.append(String.format("%-30s", type));
             sb.append(String.format("%-30s", "dis: "+ distance + " m"));
@@ -162,7 +180,7 @@ public class recomFragment extends Fragment {
                 final String lat = "40.7463956";
                 final String lon = "-73.9852992";
                 String url1 = "https://api.foursquare.com/v2/venues/search?client_id=" +
-                        clientID + "&client_secret=" + clientSecret + "&v=20150519&ll=40.7463956,-73.9852992";
+                        clientID + "&client_secret=" + clientSecret + "&v=20150519&ll="+location.get(0);
 
                 // Create the request to Foursqure, and open the connection
                 URL url = new URL(url1);
@@ -196,7 +214,7 @@ public class recomFragment extends Fragment {
 //                Log.d("permission", Environment.getExternalStorageState());
                 Log.d("their method", recomStr);
 
-                //generateNoteOnSD("response.txt", recomStr);
+                generateNoteOnSD("response1.txt", recomStr);
 
 
             } catch (IOException e) {
@@ -216,7 +234,8 @@ public class recomFragment extends Fragment {
             }
 
             try {
-                return parseRecommendation(recomStr);
+                String[] result =  parseRecommendation(recomStr);
+                return result;
             } catch (Exception e) {
                 Log.e(LOG_TAG, "ERROR PARSING JSON OBJECT");
                 return null;

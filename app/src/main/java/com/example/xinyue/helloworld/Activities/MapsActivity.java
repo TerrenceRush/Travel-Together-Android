@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,9 +66,9 @@ public class MapsActivity extends ActionBarActivity{
 //    public static final String userToken = "CAAMzoVZAzOQEBABlhZCumJV7oNY3kSnQZCOqLzVaYkyB3vtWBKadflJlTblcD1fTsVRyVkEqSc" +
 //            "ij13MbU0MobDm4wjnT6oE8J9odda3qPWZCgAivjJMUpkDk6XuSWGeCAym7aLvZC24rwxSrbd7x9VH9wXh0J" +
 //            "eCZAoHFThhLZBxjl2KbSGOXnziQUTUt2K2PX524lPzRK02Yi4WkxaBA7dSKZAZACDvG050AZD";
+public static final String MY_PREFS_NAME = "tokenInfo";
+    public String userToken;
 
-    public static final String MY_PREFS_NAME = "tokenInfo";
-    String userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
     // add get plan information from Xinyue
 
@@ -84,13 +85,17 @@ public class MapsActivity extends ActionBarActivity{
     CallbackManager callbackManager;
     private ShareDialog shareDialog;
 
-    private String city_name = "New York";
+    private ArrayList<String> city_name = new ArrayList<String>(Arrays.asList("las vegas"));
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+
+
+        userToken = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 
 
         //set up the view of action bar
@@ -140,12 +145,14 @@ public class MapsActivity extends ActionBarActivity{
         String length = Integer.toString(currentItem.getDuration());
         String size = Integer.toString(currentItem.getGroupSize());
         String participants = "";
-        for (int i = 0; i < joinlist.size(); i++) {
-            participants = participants + joinlist.get(i) + ",";
+        if (joinlist != null) {
+            for (int i = 0; i < joinlist.size(); i++) {
+                participants = participants + joinlist.get(i) + ",";
+            }
         }
         String holder = currentItem.getName();
         String description = currentItem.getDescription();
-        city_name = currentItem.getDestination();
+        city_name.set(0, currentItem.getDestination());
 
 
         gmap.put("title", title);
@@ -154,7 +161,7 @@ public class MapsActivity extends ActionBarActivity{
         gmap.put("size", size);
         gmap.put("holder", holder);
         gmap.put("description", description);
-        gmap.put("destination", city_name);
+        gmap.put("destination", city_name.get(0));
         gmap.put("return_time", return_time);
 
 
@@ -172,30 +179,52 @@ public class MapsActivity extends ActionBarActivity{
         TextView participantView = (TextView) findViewById(R.id.participants);
         participantView.setText(participants + " has joined");
 
-        setUpMapIfNeeded(city_name);
+        setUpMapIfNeeded(city_name.get(0));
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
         descriptionView.setText("Why this place is fun : " + description);
 
+        LatLng lc = null;
+        if (Geocoder.isPresent()) {
+            try {
+                Geocoder gc = new Geocoder(this);
+                List<Address> addresses = gc.getFromLocationName(city_name.get(0), 5);
+                for (Address add : addresses) {
+                    if (add.hasLatitude() && add.hasLongitude()) {
+                        lc = new LatLng(add.getLatitude(), add.getLongitude());
+                        break;
+                    }
+                }
+            }
+            catch (IOException e) {
+
+            }
+        }
+        String location = "";
+        location = location+lc.latitude +"," + lc.longitude;
+        Bundle bundle = new Bundle();
+        bundle.putString("location", location);
+        recomFragment recomf = new recomFragment();
+        recomf.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new recomFragment())
+                .add(R.id.container, recomf)
                 .commit();
 
-        ImageView avatar = (ImageView) findViewById(R.id.detail_avatar);
+        //ImageView avatar = (ImageView) findViewById(R.id.detail_avatar);
 
 
-        try {
-            avatar.setImageBitmap(getImage(currentItem.getAvatar()));
-        } catch (Exception e) {
-            Log.v("image error", "image loading error");
-        }
+//        try {
+//            avatar.setImageBitmap(getImage(currentItem.getAvatar()));
+//        } catch (Exception e) {
+//            Log.v("image error", "image loading error");
+//        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded(city_name);
+        setUpMapIfNeeded(city_name.get(0));
     }
 
 //    public void getData(JSONObject detail) throws JSONException{
@@ -389,7 +418,7 @@ public class MapsActivity extends ActionBarActivity{
             SupportMapFragment mMapFragment = (SupportMapFragment) (getSupportFragmentManager()
                     .findFragmentById(R.id.map));
             ViewGroup.LayoutParams params = mMapFragment.getView().getLayoutParams();
-            params.height = 300;
+            params.height = 400;
             mMapFragment.getView().setLayoutParams(params);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
