@@ -115,7 +115,7 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent openDetailActivityIntent = new Intent(context, MapsActivity.class);
                     openDetailActivityIntent.putExtra("planItem", listItems.get(position-1));
-                    startActivity(openDetailActivityIntent);
+                    startActivityForResult(openDetailActivityIntent, 1);
                 }
             });
 
@@ -437,6 +437,27 @@ public class ListActivity extends ActionBarActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Fragment fragment = new contentFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
+
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }
+    }
+
 
 
 

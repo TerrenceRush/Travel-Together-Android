@@ -1,5 +1,6 @@
 package com.example.xinyue.helloworld.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -10,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -23,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xinyue.helloworld.Network.NetworkOperation;
 import com.example.xinyue.helloworld.R;
@@ -46,6 +50,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,13 +73,17 @@ public class MapsActivity extends ActionBarActivity{
 //            "eCZAoHFThhLZBxjl2KbSGOXnziQUTUt2K2PX524lPzRK02Yi4WkxaBA7dSKZAZACDvG050AZD";
 public static final String MY_PREFS_NAME = "tokenInfo";
     public String userToken;
+    private Context context;
+    private String participants;
 
+
+    private Menu mOptionsMenu;
 
     // add get plan information from Xinyue
 
 
     // to store plan information
-    ArrayList<String> joinlist;
+    ArrayList<String> joinlist = new ArrayList<String>();
     HashMap<String, String> gmap = new HashMap<String, String>();
     JSONObject detail;
     String planid = "40";
@@ -92,6 +101,7 @@ public static final String MY_PREFS_NAME = "tokenInfo";
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        context = this;
 
 
 
@@ -141,15 +151,11 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         String return_time = "July-28-2015";
         planid = currentItem.getId();
         String title = currentItem.getTitle();
-        String depart_time = currentItem.getDateFrom();
+        String depart_temp = currentItem.getDateFrom();
+        String[] depart = depart_temp.split(" ");
+        String depart_time = depart[0];
         String length = Integer.toString(currentItem.getDuration());
         String size = Integer.toString(currentItem.getGroupSize());
-        String participants = "";
-        if (joinlist != null) {
-            for (int i = 0; i < joinlist.size(); i++) {
-                participants = participants + joinlist.get(i) + ",";
-            }
-        }
         String holder = currentItem.getName();
         String description = currentItem.getDescription();
         city_name.set(0, currentItem.getDestination());
@@ -171,19 +177,20 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         titleView.setText(title);
 
         TextView time = (TextView) findViewById(R.id.time);
-        time.setText(Html.fromHtml("on <b><font color=\"blue\">" + depart_time + "</style></b> for <b><font color=\"blue\">" + length+ "</font></b> days"));
+        time.setText(Html.fromHtml("on <b><font color=\"blue\">" + depart_time + "</font></b> for <b><font color=\"blue\">" + length+ "</font></b> days"));
 
         TextView sizeHolderView = (TextView) findViewById(R.id.size_holder);
         sizeHolderView.setText(Html.fromHtml("Group Size : <b><font color=\"red\">" + size + "</font></b>") + "               Created by " + Html.fromHtml("<b><font color=\"red\">" + holder+ "</font></b>"));
 
-        TextView participantView = (TextView) findViewById(R.id.participants);
-        participantView.setText(participants + " has joined");
+
 
         setUpMapIfNeeded(city_name.get(0));
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
         descriptionView.setText("Why this place is fun : " + description);
 
+        TextView recommendation = (TextView) findViewById(R.id.fourRecom);
+        recommendation.setText(Html.fromHtml("<b><font color=\"blue\">Recommendation from Foursquare</font></b>"));
         LatLng lc = null;
         if (Geocoder.isPresent()) {
             try {
@@ -272,12 +279,26 @@ public static final String MY_PREFS_NAME = "tokenInfo";
                 if (joined_list != null) {
                     for (int i = 0; i < joined_list.length(); i++) {
                         try {
-                            joinlist.add(joined_list.get(i).toString());
+
+                            JSONObject friend = joined_list.getJSONObject(i);
+                            String name = friend.getString("name");
+                            joinlist.add(name);
+                            Log.v("name", name);
                         } catch (Exception e) {
                             Log.e("joinlist", "error in join list");
                         }
                     }
                 }
+                participants = "";
+                if (joinlist != null && joinlist.size() != 0) {
+                    for (int i = 0; i < joinlist.size(); i++) {
+                        participants = participants + joinlist.get(i) + " ";
+                    }
+                } else {
+                    participants = "no one ";
+                }
+                TextView participantView = (TextView) findViewById(R.id.participants);
+                participantView.setText(participants + " has joined");
                 gmap.put("joinable",joinable);
                 gmap.put("editable",editable);
                 gmap.put("joined", joined);
@@ -304,6 +325,7 @@ public static final String MY_PREFS_NAME = "tokenInfo";
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 JSONObject delete = no.planActions("delete", userToken, planid);
+                mUIHandler.sendEmptyMessage(2);
                 Log.v("plan", delete.toString());
             }
         }).start();
@@ -315,6 +337,19 @@ public static final String MY_PREFS_NAME = "tokenInfo";
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 JSONObject join = no.planActions("join",userToken, planid);
+                String myname = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("name", "");
+                joinlist.add(myname);
+                participants = "";
+                if (joinlist != null && joinlist.size() != 0) {
+                    for (int i = 0; i < joinlist.size(); i++) {
+                        participants = participants + joinlist.get(i) + " ";
+                    }
+                } else {
+                    participants = "no one ";
+                }
+                gmap.put("joinable", "false");
+                gmap.put("joined", "true");
+                mUIHandler.sendEmptyMessage(0);
                 Log.v("plan", join.toString());
             }
         }).start();
@@ -326,6 +361,20 @@ public static final String MY_PREFS_NAME = "tokenInfo";
             public void run() {
                 NetworkOperation no = new NetworkOperation();
                 JSONObject join = no.planActions("plan/unjoin",userToken, planid);
+                String myname = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("name", "");
+                joinlist.remove(myname);
+                participants = "";
+                if (joinlist != null && joinlist.size()!= 0) {
+                    for (int i = 0; i < joinlist.size(); i++) {
+                        participants = participants + joinlist.get(i) + " ";
+                    }
+                } else {
+                    participants = "no one ";
+                }
+                gmap.put("joinable", "true");
+                gmap.put("joined", "false");
+                mUIHandler.sendEmptyMessage(1);
+                Log.v("plan", join.toString());
                 Log.v("plan", join.toString());
             }
         }).start();
@@ -348,6 +397,7 @@ public static final String MY_PREFS_NAME = "tokenInfo";
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_menu, menu);
+        mOptionsMenu = menu;
         return true;
 
     }
@@ -504,6 +554,42 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         return  mIcon_val;
     }
 
+    @SuppressLint("HandlerLeak")
+    private Handler mUIHandler = new Handler() {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 0 :{
+                    TextView participantView = (TextView) findViewById(R.id.participants);
+                    participantView.setText(participants + " has joined");
+                    onPrepareOptionsMenu(mOptionsMenu);
+                    break;
+                }
+                case 1 :{
+                    TextView participantView = (TextView) findViewById(R.id.participants);
+                    participantView.setText(participants + " has joined");
+                    onPrepareOptionsMenu(mOptionsMenu);
+                    break;
+                }
+                case 2 :{
+                    Intent intent = new Intent();
+                    intent.putExtra("planId", planid);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                }
+            }
+
+
+
+
+
+
+        }
+
+    };
 
 
 }
