@@ -401,9 +401,9 @@ public class NewPostActivity extends ActionBarActivity {
             builder.show();
         }
         else{
-            int days = 0;
+            long days = 0;
             if(retDate != null){
-                days = (int)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
+                days = (long)(retDate.getTime() - deptDate.getTime())/(24 * 60 * 60 * 1000);
             }
 
             if(days < 0){
@@ -417,7 +417,7 @@ public class NewPostActivity extends ActionBarActivity {
                 builder.show();
             }
             else{
-                String text = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
+                String text = PlanGenerator.getPlanString(title, destination, departureDate, (int)days, information, type, Integer.parseInt(size), addedFriendsId);
                 //List<NameValuePair> params = PlanGenerator.getPlanString(title, destination, departureDate, days, information, type, Integer.parseInt(size), addedFriendsId);
                 token = getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE).getString("fbAccessToken", "");
 //              Log.i("before_add", destination + " " + departureDate + " duration: " + Integer.toString(days) + " info: " + information + " type: " + Integer.toString(type) + " size: " + size);
