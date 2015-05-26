@@ -28,7 +28,6 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light"
 
-
         >
 
 
@@ -45,7 +44,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity
@@ -75,6 +73,13 @@
         <activity
             android:name=".Activities.MapsActivity"
             android:theme="@style/ActionBarTheme">
+
+        </activity>
+
+        <activity
+            android:name = ".Activities.EditPost"
+            android:theme="@style/ActionBarTheme">
+
         </activity>
 
     </application>
