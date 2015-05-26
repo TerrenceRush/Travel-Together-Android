@@ -132,7 +132,7 @@ public class recomFragment extends Fragment {
             }
             sb.append(String.format("%-20s", name) + "\n");
             sb.append(String.format("%-30s", type));
-            sb.append(String.format("%-30s", "dis: "+ distance + " m"));
+            sb.append(String.format("%-50s", "dis: "+ distance + " m"));
             recom[i] = sb.toString();
         }
         return recom;

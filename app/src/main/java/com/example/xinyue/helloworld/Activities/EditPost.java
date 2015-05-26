@@ -296,8 +296,9 @@ public class EditPost extends Activity {
     }
 
     public void moveToList(View view){
-        Intent intent = new Intent(this, MapsActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, MapsActivity.class);
+//        startActivity(intent);
+            onBackPressed();
     }
 
 

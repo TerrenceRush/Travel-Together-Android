@@ -180,14 +180,13 @@ public static final String MY_PREFS_NAME = "tokenInfo";
         time.setText(Html.fromHtml("on <b><font color=\"blue\">" + depart_time + "</font></b> for <b><font color=\"blue\">" + length+ "</font></b> days"));
 
         TextView sizeHolderView = (TextView) findViewById(R.id.size_holder);
-        sizeHolderView.setText(Html.fromHtml("Group Size : <b><font color=\"red\">" + size + "</font></b>") + "               Created by " + Html.fromHtml("<b><font color=\"red\">" + holder+ "</font></b>"));
-
+        sizeHolderView.setText(Html.fromHtml("Group Size : <b><font color=\"red\">" + size + "</font></b>") + "                   Created by " + holder);
 
 
         setUpMapIfNeeded(city_name.get(0));
 
         TextView descriptionView = (TextView) findViewById(R.id.description);
-        descriptionView.setText("Why this place is fun : " + description);
+        descriptionView.setText(Html.fromHtml("<b><font color=\"blue\"> Why this place is fun :</font></b>" + description));
 
         TextView recommendation = (TextView) findViewById(R.id.fourRecom);
         recommendation.setText(Html.fromHtml("<b><font color=\"blue\">Recommendation from Foursquare</font></b>"));
